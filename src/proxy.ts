@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getToken } from 'next-auth/jwt'
 
 function getSignedInRedirect(role: unknown, req: NextRequest) {
-  const target = role === 'VENDOR' ? '/dashboard/profile' : '/event/new'
+  const target = role === 'VENDOR' ? '/dashboard/profile' : '/event'
   return NextResponse.redirect(new URL(target, req.url))
 }
 

@@ -1,8 +1,9 @@
 import type { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
-import { auth } from '@/lib/auth'
-import prisma from '@/lib/prisma'
 import { EventDetailsPage } from '@/features/events/details/EventDetailsPage'
+import { eventRepository } from '@/features/events/server/event.repository'
+import { getEventForUser } from '@/features/events/server/event.service'
+import { auth } from '@/lib/auth'
 
 type EventPageProps = {
   params: Promise<{
@@ -22,12 +23,7 @@ export default async function EventPage({ params }: EventPageProps) {
     redirect(`/login?next=/event/${id}`)
   }
 
-  const event = await prisma.event.findFirst({
-    where: {
-      id,
-      userId: session.user.id,
-    },
-  })
+  const event = await getEventForUser(session.user.id, id, eventRepository)
 
   if (!event) {
     notFound()
