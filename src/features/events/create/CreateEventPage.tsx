@@ -2,9 +2,10 @@
 
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { FormEvent, ReactNode, useState } from 'react'
+import { ChangeEvent, FormEvent, ReactNode, useState } from 'react'
 import styles from './CreateEvent.module.css'
 import { eventAtmospheres, eventFormats, eventWorkspaceTabs } from './createEvent.constants'
+import { uploadEventCover } from './createEventUpload'
 
 type CreateEventResponse = {
   event?: {
@@ -74,7 +75,7 @@ function Header() {
             <button className={`${styles.iconButton} ${styles.mailButton}`} type="button" aria-label="Сообщения">
               ✉<span className={styles.badge}>1</span>
             </button>
-            <Link className={styles.avatar} href="/event/new">
+            <Link className={styles.avatar} href="/event">
               <span className={styles.avatarCircle}>O</span>
               <span>Ольга</span>
             </Link>
@@ -169,8 +170,42 @@ export function CreateEventPage() {
   const router = useRouter()
   const [selectedFormat, setSelectedFormat] = useState(eventFormats[0])
   const [selectedAtmospheres, setSelectedAtmospheres] = useState<string[]>([eventAtmospheres[0]])
+  const [coverUrl, setCoverUrl] = useState('')
+  const [coverPreviewUrl, setCoverPreviewUrl] = useState('')
   const [error, setError] = useState('')
+  const [uploadStatus, setUploadStatus] = useState('')
+  const [isUploading, setUploading] = useState(false)
   const [isSubmitting, setSubmitting] = useState(false)
+
+  async function handleCoverChange(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    if (coverPreviewUrl) {
+      URL.revokeObjectURL(coverPreviewUrl)
+    }
+
+    const previewUrl = URL.createObjectURL(file)
+    setCoverPreviewUrl(previewUrl)
+    setCoverUrl('')
+    setError('')
+    setUploadStatus('Загружаем фото...')
+    setUploading(true)
+
+    try {
+      const uploaded = await uploadEventCover(file)
+      setCoverUrl(uploaded.publicUrl)
+      setUploadStatus('Фото загружено')
+    } catch (err) {
+      setCoverPreviewUrl('')
+      URL.revokeObjectURL(previewUrl)
+      setUploadStatus('')
+      setError(err instanceof Error ? err.message : 'Не удалось загрузить фото')
+    } finally {
+      setUploading(false)
+      event.target.value = ''
+    }
+  }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -194,6 +229,7 @@ export function CreateEventPage() {
       format: selectedFormat,
       atmospheres: selectedAtmospheres,
       notes: formValue(formData, 'notes'),
+      coverUrl,
     }
 
     try {
@@ -229,12 +265,19 @@ export function CreateEventPage() {
       <Header />
       <main className={styles.content}>
         <aside className={styles.mediaColumn}>
-          <div className={styles.uploadBox}>
-            <IconImage />
-          </div>
-          <button className={`${styles.darkButton} ${styles.uploadButton}`} type="button">
-            ▣ Загрузить фото
-          </button>
+          <label className={styles.uploadBox}>
+            {coverPreviewUrl ? (
+              <span className={styles.coverPreview} style={{ backgroundImage: `url(${coverPreviewUrl})` }} />
+            ) : (
+              <IconImage />
+            )}
+            <input accept="image/avif,image/jpeg,image/png,image/webp" className={styles.fileInput} onChange={handleCoverChange} type="file" />
+          </label>
+          <label className={`${styles.darkButton} ${styles.uploadButton} ${isUploading ? styles.buttonDisabled : ''}`}>
+            ▣ {isUploading ? 'Загрузка...' : 'Загрузить фото'}
+            <input accept="image/avif,image/jpeg,image/png,image/webp" className={styles.fileInput} disabled={isUploading} onChange={handleCoverChange} type="file" />
+          </label>
+          {uploadStatus ? <p className={styles.uploadStatus}>{uploadStatus}</p> : null}
         </aside>
 
         <form className={styles.form} onSubmit={handleSubmit}>
@@ -374,10 +417,10 @@ export function CreateEventPage() {
           </section>
 
           <div className={styles.formActions}>
-            <button className={styles.goldButton} disabled={isSubmitting} type="submit">
+            <button className={styles.goldButton} disabled={isSubmitting || isUploading} type="submit">
               {isSubmitting ? 'Создаем...' : 'Создать мероприятие'}
             </button>
-            <Link className={styles.ghostButton} href="/">
+            <Link className={styles.ghostButton} href="/event">
               Отменить
             </Link>
           </div>
