@@ -1,36 +1,109 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# I GO WED
 
-## Getting Started
+Wedding marketplace with SEO frontend, separate API, PostgreSQL, and media storage.
 
-First, run the development server:
+## Stack
+
+- Frontend: Next.js 16 App Router, React 19, TypeScript, Tailwind CSS v4
+- Backend: Fastify API in `apps/api`
+- Database: PostgreSQL + Prisma
+- Media: S3-compatible storage, MinIO for local development
+- Tests: Vitest for API
+
+## Branches
+
+- `main` - stable integration branch
+- `client` - frontend work
+- `backend` - API, database, Docker, tests
+
+Remote:
+
+```bash
+git remote -v
+```
+
+## Local Start
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start infrastructure:
+
+```bash
+docker compose up -d postgres minio
+```
+
+Apply database schema:
+
+```bash
+npm run db:push
+```
+
+Run frontend and API together:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Or run separately:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run dev:web
+npm run dev:api
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+URLs:
 
-## Learn More
+- Web: http://localhost:3000
+- API: http://localhost:4000/api/v1
+- API health: http://localhost:4000/api/v1/health
+- MinIO console: http://localhost:9001
 
-To learn more about Next.js, take a look at the following resources:
+## Checks
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm run test
+npm run lint
+npm run build:api
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Project Layout
 
-## Deploy on Vercel
+```text
+apps/
+  api/
+    src/
+      config/
+      modules/
+        catalog/
+        health/
+    test/
+docs/
+  ARCHITECTURE.md
+  RELEASE_PLAN.md
+prisma/
+src/
+  app/
+  components/
+  data/
+  lib/
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Development Direction
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The first release should be built vertically:
+
+1. API and database contracts.
+2. Seeded data for the homepage.
+3. Figma-accurate homepage sections as small reusable modules.
+4. Desktop and mobile responsive implementation at the same time.
+5. Tests and screenshot checks before expanding features.
+
+See:
+
+- [Architecture](docs/ARCHITECTURE.md)
+- [First Release Plan](docs/RELEASE_PLAN.md)
+- [Git Workflow](docs/GIT_WORKFLOW.md)
