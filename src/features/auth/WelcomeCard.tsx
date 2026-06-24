@@ -31,7 +31,7 @@ export function WelcomeCard({ role }: WelcomeCardProps) {
           </Link>
         ) : (
           <>
-            <Link className={styles.actionDark} href="/dashboard">
+            <Link className={styles.actionDark} href="/event/new">
               Создать мероприятие
             </Link>
             <Link className={styles.actionGold} href="/">
