@@ -39,6 +39,25 @@ function Header() {
   )
 }
 
+function EventCover({ event }: { event: EventRecord }) {
+  if (!event.coverUrl) {
+    return (
+      <div className={`${styles.cover} ${styles.coverEmpty}`}>
+        <span>I GO WED</span>
+      </div>
+    )
+  }
+
+  return (
+    <div
+      aria-label={`Обложка мероприятия ${event.title}`}
+      className={styles.cover}
+      role="img"
+      style={{ backgroundImage: `url(${event.coverUrl})` }}
+    />
+  )
+}
+
 export function EventDetailsPage({ event }: { event: EventRecord }) {
   const place = [event.country, event.city].filter(Boolean).join(', ') || 'Место не выбрано'
   const guests = formatRange(event.guestMin, event.guestMax, 'Гости не указаны')
@@ -48,6 +67,7 @@ export function EventDetailsPage({ event }: { event: EventRecord }) {
     <div className={styles.page}>
       <Header />
       <main className={styles.content}>
+        <EventCover event={event} />
         <section className={styles.hero}>
           <div className={styles.summary}>
             <p className={styles.eyebrow}>{event.eventType}</p>

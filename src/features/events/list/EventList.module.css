@@ -119,9 +119,9 @@
 .card {
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 22px;
+  overflow: hidden;
   display: grid;
-  gap: 18px;
+  align-content: start;
   transition:
     border-color 160ms ease,
     transform 160ms ease;
@@ -130,6 +130,29 @@
 .card:hover {
   border-color: #d0ad63;
   transform: translateY(-2px);
+}
+
+.cover {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background-color: #f3f3f3;
+  background-position: center;
+  background-size: cover;
+}
+
+.coverEmpty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9a9a9a;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.cardBody {
+  padding: 22px;
+  display: grid;
+  gap: 18px;
 }
 
 .cardHead {

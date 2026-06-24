@@ -24,39 +24,61 @@ function Header() {
   )
 }
 
+function EventCover({ event }: { event: EventRecord }) {
+  if (!event.coverUrl) {
+    return (
+      <div className={`${styles.cover} ${styles.coverEmpty}`}>
+        <span>I GO WED</span>
+      </div>
+    )
+  }
+
+  return (
+    <div
+      aria-label={`Обложка мероприятия ${event.title}`}
+      className={styles.cover}
+      role="img"
+      style={{ backgroundImage: `url(${event.coverUrl})` }}
+    />
+  )
+}
+
 function EventCard({ event }: { event: EventRecord }) {
   return (
     <Link className={styles.card} href={`/event/${event.id}`}>
-      <div className={styles.cardHead}>
-        <div>
-          <p className={styles.type}>{event.eventType}</p>
-          <h2 className={styles.cardTitle}>{event.title}</h2>
+      <EventCover event={event} />
+      <div className={styles.cardBody}>
+        <div className={styles.cardHead}>
+          <div>
+            <p className={styles.type}>{event.eventType}</p>
+            <h2 className={styles.cardTitle}>{event.title}</h2>
+          </div>
+          <span className={styles.datePill}>{formatEventDate(event.eventDate)}</span>
         </div>
-        <span className={styles.datePill}>{formatEventDate(event.eventDate)}</span>
-      </div>
 
-      <div className={styles.meta}>
-        <span className={styles.metaItem}>
-          <span className={styles.metaLabel}>Место</span>
-          <span className={styles.metaValue}>{formatEventPlace(event.country, event.city)}</span>
-        </span>
-        <span className={styles.metaItem}>
-          <span className={styles.metaLabel}>Гости</span>
-          <span className={styles.metaValue}>{formatEventRange(event.guestMin, event.guestMax, 'чел.')}</span>
-        </span>
-        <span className={styles.metaItem}>
-          <span className={styles.metaLabel}>Бюджет</span>
-          <span className={styles.metaValue}>{formatEventRange(event.budgetMin, event.budgetMax, '₽')}</span>
-        </span>
-      </div>
-
-      <div className={styles.chips}>
-        {event.format ? <span className={styles.chip}>{event.format}</span> : null}
-        {event.atmospheres.slice(0, 3).map((atmosphere) => (
-          <span className={styles.chip} key={atmosphere}>
-            {atmosphere}
+        <div className={styles.meta}>
+          <span className={styles.metaItem}>
+            <span className={styles.metaLabel}>Место</span>
+            <span className={styles.metaValue}>{formatEventPlace(event.country, event.city)}</span>
           </span>
-        ))}
+          <span className={styles.metaItem}>
+            <span className={styles.metaLabel}>Гости</span>
+            <span className={styles.metaValue}>{formatEventRange(event.guestMin, event.guestMax, 'чел.')}</span>
+          </span>
+          <span className={styles.metaItem}>
+            <span className={styles.metaLabel}>Бюджет</span>
+            <span className={styles.metaValue}>{formatEventRange(event.budgetMin, event.budgetMax, '₽')}</span>
+          </span>
+        </div>
+
+        <div className={styles.chips}>
+          {event.format ? <span className={styles.chip}>{event.format}</span> : null}
+          {event.atmospheres.slice(0, 3).map((atmosphere) => (
+            <span className={styles.chip} key={atmosphere}>
+              {atmosphere}
+            </span>
+          ))}
+        </div>
       </div>
     </Link>
   )
