@@ -1,0 +1,621 @@
+.page {
+  min-height: 100vh;
+  background: #fff;
+  color: #202222;
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  min-height: 730px;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  padding: 100px 24px 86px;
+}
+
+.mainCentered {
+  align-items: center;
+  padding-top: 64px;
+}
+
+.panel {
+  width: min(100%, 398px);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.brand {
+  text-align: center;
+  white-space: pre-line;
+}
+
+.brandLogo {
+  margin: 0;
+  font-size: 38px;
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.brandTagline {
+  margin: 18px 0 0;
+  color: #202222;
+  font-size: 16px;
+  line-height: 1.18;
+  font-weight: 500;
+}
+
+.formArea {
+  margin-top: 72px;
+}
+
+.title {
+  margin: 0 0 36px;
+  text-align: center;
+  font-size: 34px;
+  line-height: 1.1;
+  font-weight: 500;
+}
+
+.tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 46px;
+  margin-bottom: 36px;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 2px solid #dfdfdf;
+  color: #ababab;
+  font-size: 16px;
+  line-height: 1;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.tabActive {
+  border-bottom-color: #202222;
+  color: #202222;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.fieldBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fieldHint {
+  margin: 0 0 0 29px;
+  color: #777;
+  font-size: 12px;
+  line-height: 1.25;
+}
+
+.inputWrap {
+  height: 45px;
+  border: 1.5px solid #8c8c8c;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  background: #fff;
+  overflow: hidden;
+}
+
+.input {
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  padding: 0 19px;
+  color: #202222;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.input::placeholder {
+  color: #8c8c8c;
+}
+
+.phonePrefix {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  height: 100%;
+  padding-left: 22px;
+  color: #202222;
+  font-size: 16px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.flag {
+  font-size: 13px;
+  line-height: 1;
+}
+
+.chevron {
+  color: #777;
+  font-size: 12px;
+  transform: translateY(-1px);
+}
+
+.eye {
+  width: 48px;
+  height: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #6e6e6e;
+  flex-shrink: 0;
+}
+
+.button {
+  width: 100%;
+  height: 49px;
+  border-radius: 999px;
+  background: #202222;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.buttonNarrow {
+  width: 160px;
+  align-self: center;
+}
+
+.forgot {
+  align-self: center;
+  margin-top: -16px;
+  color: #7a7a7a;
+  font-size: 13px;
+  line-height: 1;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.socials {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 64px;
+}
+
+.socialButton {
+  width: 33px;
+  height: 33px;
+  border-radius: 50%;
+  background: #d89c49;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  line-height: 1;
+  font-weight: 800;
+}
+
+.socialButton[data-provider="vk"] {
+  font-size: 13px;
+  text-transform: uppercase;
+}
+
+.legal {
+  max-width: 430px;
+  margin: 24px auto 0;
+  color: #777;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.legal a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.error {
+  margin: -14px 0 0;
+  color: #b42318;
+  text-align: center;
+  font-size: 13px;
+}
+
+.codeTitle {
+  margin: 0;
+  text-align: center;
+  font-size: 34px;
+  line-height: 1.1;
+  font-weight: 500;
+}
+
+.codeBoxes {
+  display: flex;
+  justify-content: center;
+  gap: 19px;
+  margin-top: 65px;
+}
+
+.codeInput {
+  width: 51px;
+  height: 55px;
+  border: 1.5px solid #777;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 24px;
+  outline: 0;
+}
+
+.codeHint {
+  margin-top: 58px;
+  text-align: center;
+  color: #202222;
+  font-size: 15px;
+}
+
+.codeHint span {
+  color: #1812b8;
+}
+
+.welcomeCard {
+  width: min(100%, 884px);
+  min-height: 468px;
+  border-radius: 28px;
+  background: #f4f4f4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 72px 72px 76px;
+  text-align: center;
+}
+
+.welcomeBadge {
+  height: 35px;
+  padding: 0 18px;
+  border-radius: 999px;
+  background: #fff;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: #3d3d3d;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.welcomeHeart {
+  color: #000;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.welcomeTitle {
+  max-width: 720px;
+  margin: 30px 0 0;
+  color: #111;
+  font-size: 34px;
+  line-height: 1.08;
+  font-weight: 500;
+}
+
+.welcomeText {
+  max-width: 700px;
+  margin: 26px 0 0;
+  color: #202222;
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+.welcomeActions {
+  display: flex;
+  justify-content: center;
+  gap: 31px;
+  margin-top: 80px;
+}
+
+.welcomeVendor .welcomeActions {
+  margin-top: 78px;
+}
+
+.actionDark,
+.actionGold {
+  min-width: 210px;
+  height: 41px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 22px;
+  color: #fff;
+  font-size: 15px;
+  line-height: 1;
+  font-weight: 700;
+}
+
+.actionDark {
+  background: #202222;
+}
+
+.actionGold {
+  background: #dda04e;
+}
+
+.footer {
+  min-height: 352px;
+  background: #202222;
+  color: #fff;
+}
+
+.footerInner {
+  max-width: 1700px;
+  margin: 0 auto;
+  padding: 94px 104px 58px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 150px;
+  gap: 48px;
+  align-items: start;
+}
+
+.footerLogo {
+  margin: 0 0 31px;
+  font-size: 30px;
+  line-height: 1;
+  font-weight: 800;
+}
+
+.footerLinks {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 15px;
+  line-height: 1.1;
+}
+
+.footerSelects {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-top: 3px;
+}
+
+.selectPill {
+  width: 228px;
+  height: 38px;
+  border: 1px solid rgba(255, 255, 255, 0.38);
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 17px;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 14px;
+}
+
+.selectLeft {
+  display: inline-flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.selectMuted {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.ageMark {
+  justify-self: end;
+  width: 83px;
+  height: 83px;
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.ageShape {
+  width: 83px;
+  height: 83px;
+  border: 1.4px solid rgba(255, 255, 255, 0.82);
+  border-radius: 42% 58% 47% 53% / 52% 42% 58% 48%;
+  display: grid;
+  place-items: center;
+}
+
+.copyright {
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.5);
+  text-align: center;
+  padding: 31px 24px;
+  font-size: 13px;
+}
+
+@media (max-width: 767px) {
+  .page {
+    min-height: 100svh;
+  }
+
+  .main {
+    min-height: 100svh;
+    padding: 62px 36px 40px;
+    align-items: flex-start;
+  }
+
+  .mainCentered {
+    align-items: center;
+    padding: 0 16px;
+  }
+
+  .panel {
+    width: 100%;
+  }
+
+  .brandLogo {
+    font-size: 22px;
+  }
+
+  .brandTagline {
+    margin-top: 16px;
+    font-size: 14px;
+    line-height: 1.15;
+  }
+
+  .formArea {
+    margin-top: 90px;
+  }
+
+  .title {
+    margin-bottom: 36px;
+    font-size: 18px;
+    font-weight: 800;
+  }
+
+  .tabs {
+    height: 43px;
+    margin-bottom: 22px;
+  }
+
+  .tab {
+    font-size: 15px;
+    text-transform: none;
+  }
+
+  .form {
+    gap: 22px;
+  }
+
+  .inputWrap {
+    height: 31px;
+    border-width: 1.2px;
+  }
+
+  .input {
+    padding: 0 12px;
+    font-size: 13px;
+  }
+
+  .phonePrefix {
+    gap: 8px;
+    padding-left: 13px;
+    font-size: 13px;
+  }
+
+  .eye {
+    width: 38px;
+  }
+
+  .button {
+    width: 161px;
+    height: 35px;
+    align-self: center;
+    font-size: 14px;
+  }
+
+  .forgot {
+    margin-top: -8px;
+    font-size: 12px;
+  }
+
+  .fieldHint {
+    margin-left: 0;
+    font-size: 12px;
+    line-height: 1.15;
+  }
+
+  .socials {
+    gap: 15px;
+    margin-top: 99px;
+  }
+
+  .socialButton {
+    width: 33px;
+    height: 33px;
+  }
+
+  .legal {
+    width: min(100%, 290px);
+    margin-top: 21px;
+    font-size: 12px;
+    line-height: 1.55;
+  }
+
+  .footer {
+    display: none;
+  }
+
+  .codeTitle {
+    font-size: 24px;
+  }
+
+  .codeBoxes {
+    gap: 8px;
+    margin-top: 44px;
+  }
+
+  .codeInput {
+    width: 42px;
+    height: 48px;
+  }
+
+  .codeHint {
+    margin-top: 42px;
+    font-size: 13px;
+  }
+
+  .welcomeCard {
+    min-height: 330px;
+    border-radius: 9px;
+    padding: 40px 20px;
+  }
+
+  .welcomeBadge {
+    height: 31px;
+    padding: 0 16px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .welcomeTitle {
+    margin-top: 22px;
+    font-size: 18px;
+    line-height: 1.08;
+    font-weight: 800;
+  }
+
+  .welcomeText {
+    margin-top: 28px;
+    font-size: 14px;
+    line-height: 1.12;
+  }
+
+  .welcomeActions {
+    gap: 8px;
+    margin-top: 39px;
+  }
+
+  .welcomeVendor .welcomeActions {
+    margin-top: 40px;
+  }
+
+  .actionDark,
+  .actionGold {
+    min-width: 0;
+    height: 36px;
+    padding: 0 16px;
+    font-size: 14px;
+  }
+}

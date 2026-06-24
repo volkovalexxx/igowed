@@ -1,7 +1,4 @@
-import React from 'react';
-import Link from 'next/link';
-
-/* ── Wedding Rings SVG ───────────────────────────────────────────────────── */
+import Link from 'next/link'
 
 function WeddingRings() {
   return (
@@ -13,7 +10,6 @@ function WeddingRings() {
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
     >
-      {/* Left ring */}
       <circle
         cx="44"
         cy="40"
@@ -24,7 +20,6 @@ function WeddingRings() {
         strokeLinecap="round"
         style={{ paintOrder: 'stroke fill' }}
       />
-      {/* Right ring */}
       <circle
         cx="76"
         cy="40"
@@ -35,7 +30,6 @@ function WeddingRings() {
         strokeLinecap="round"
         style={{ paintOrder: 'stroke fill' }}
       />
-      {/* Small diamond on top of left ring */}
       <path
         d="M40 14 L44 8 L48 14 L44 20 Z"
         stroke="#D39D55"
@@ -45,10 +39,8 @@ function WeddingRings() {
       />
       <line x1="40" y1="14" x2="48" y2="14" stroke="#D39D55" strokeWidth="1" />
     </svg>
-  );
+  )
 }
-
-/* ── 404 Page ─────────────────────────────────────────────────────────────── */
 
 export default function NotFound() {
   return (
@@ -65,25 +57,20 @@ export default function NotFound() {
         fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
       }}
     >
-      {/* Logo */}
       <div style={{ marginBottom: 32 }}>
         <span
           style={{
             fontWeight: 800,
             fontSize: 24,
-            letterSpacing: '-0.3px',
             color: '#1A1A1A',
           }}
         >
-          I GO{' '}
-          <span style={{ color: '#D39D55' }}>WED</span>
+          I GO <span style={{ color: '#D39D55' }}>WED</span>
         </span>
       </div>
 
-      {/* Illustration */}
       <WeddingRings />
 
-      {/* 404 number — decorative background */}
       <div style={{ position: 'relative', margin: '8px 0 4px' }}>
         <div
           aria-hidden="true"
@@ -94,14 +81,12 @@ export default function NotFound() {
             color: '#D39D55',
             opacity: 0.15,
             userSelect: 'none',
-            letterSpacing: '-4px',
           }}
         >
           404
         </div>
       </div>
 
-      {/* Heading */}
       <h1
         style={{
           fontSize: 28,
@@ -114,7 +99,6 @@ export default function NotFound() {
         Страница не найдена
       </h1>
 
-      {/* Subtitle */}
       <p
         style={{
           fontSize: 15,
@@ -127,7 +111,6 @@ export default function NotFound() {
         Возможно, она была перемещена или удалена
       </p>
 
-      {/* Buttons */}
       <div
         style={{
           display: 'flex',
@@ -150,15 +133,6 @@ export default function NotFound() {
             background: '#D39D55',
             textDecoration: 'none',
             border: '2px solid #D39D55',
-            transition: 'background 150ms, border-color 150ms',
-          }}
-          onMouseEnter={(e) => {
-            (e.currentTarget as HTMLAnchorElement).style.background = '#B8863E';
-            (e.currentTarget as HTMLAnchorElement).style.borderColor = '#B8863E';
-          }}
-          onMouseLeave={(e) => {
-            (e.currentTarget as HTMLAnchorElement).style.background = '#D39D55';
-            (e.currentTarget as HTMLAnchorElement).style.borderColor = '#D39D55';
           }}
         >
           На главную
@@ -177,18 +151,11 @@ export default function NotFound() {
             background: 'transparent',
             textDecoration: 'none',
             border: '2px solid #D39D55',
-            transition: 'background 150ms',
-          }}
-          onMouseEnter={(e) => {
-            (e.currentTarget as HTMLAnchorElement).style.background = '#FBF4EA';
-          }}
-          onMouseLeave={(e) => {
-            (e.currentTarget as HTMLAnchorElement).style.background = 'transparent';
           }}
         >
           Каталог
         </Link>
       </div>
     </div>
-  );
+  )
 }
