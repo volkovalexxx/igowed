@@ -1,0 +1,240 @@
+generator client {
+  provider        = "prisma-client-js"
+  output          = "../src/generated/prisma"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  CLIENT
+  VENDOR
+  ADMIN
+}
+
+enum DisplayMode {
+  VERTICAL
+  HORIZONTAL
+  SQUARE
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  emailVerified DateTime?
+  password      String?
+  name          String?
+  image         String?
+  role          Role      @default(CLIENT)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  vendor           Vendor?
+  bookings         Booking[]
+  favorites        Favorite[]
+  reviews          Review[]
+  sentMessages     Message[] @relation("SentMessages")
+  receivedMessages Message[] @relation("ReceivedMessages")
+}
+
+model Vendor {
+  id           String @id @default(cuid())
+  userId       String @unique
+  slug         String @unique
+  firstName    String
+  lastName     String
+  username     String @unique
+  bio          String? @db.Text
+  avatar       String?
+  isPro        Boolean @default(false)
+
+  country      String   @default("Беларусь")
+  cities       String[]
+
+  phone        String?
+  phone2       String?
+  website      String?
+  instagram    String?
+  address      String?
+  lat          Float?
+  lng          Float?
+  workingHours String?
+
+  businessType String?
+  bankDetails  String? @db.Text
+
+  languages      String[]    @default(["Русский"])
+  galleryDisplay DisplayMode @default(VERTICAL)
+  cardDisplay    DisplayMode @default(VERTICAL)
+
+  rating       Float   @default(0)
+  reviewCount  Int     @default(0)
+  pricePerHour Int?
+  currency     String  @default("RUB")
+
+  isActive   Boolean  @default(true)
+  isVerified Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  services        VendorService[]
+  specializations Specialization[]
+  photos          Photo[]
+  reviews         Review[]
+  favorites       Favorite[]
+  bookings        Booking[]
+  bannerAds       BannerAd[]
+}
+
+model Category {
+  id    String @id @default(cuid())
+  slug  String @unique
+  name  String
+  icon  String?
+  image String?
+  order Int     @default(0)
+
+  services       Service[]
+  vendorServices VendorService[]
+}
+
+model Service {
+  id         String @id @default(cuid())
+  categoryId String
+  slug       String @unique
+  name       String
+  image      String?
+  order      Int    @default(0)
+
+  category       Category        @relation(fields: [categoryId], references: [id])
+  vendorServices VendorService[]
+}
+
+model VendorService {
+  id          String  @id @default(cuid())
+  vendorId    String
+  categoryId  String
+  serviceId   String?
+  price       Int?
+  currency    String  @default("RUB")
+  unit        String  @default("час")
+  description String? @db.Text
+
+  vendor   Vendor   @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id])
+  service  Service? @relation(fields: [serviceId], references: [id])
+
+  @@unique([vendorId, serviceId])
+}
+
+model Specialization {
+  id       String @id @default(cuid())
+  vendorId String
+  name     String
+
+  vendor Vendor @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+}
+
+model Photo {
+  id        String   @id @default(cuid())
+  vendorId  String
+  url       String
+  thumb     String?
+  order     Int      @default(0)
+  isAvatar  Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  vendor Vendor @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  vendorId  String
+  userId    String
+  rating    Int
+  text      String?  @db.Text
+  createdAt DateTime @default(now())
+
+  vendor Vendor @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Favorite {
+  id        String   @id @default(cuid())
+  userId    String
+  vendorId  String
+  createdAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  vendor Vendor @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, vendorId])
+}
+
+model Booking {
+  id        String        @id @default(cuid())
+  userId    String
+  vendorId  String
+  date      DateTime?
+  message   String?       @db.Text
+  status    BookingStatus @default(PENDING)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  vendor Vendor @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+}
+
+model Message {
+  id         String   @id @default(cuid())
+  senderId   String
+  receiverId String
+  text       String   @db.Text
+  isRead     Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  sender   User @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver User @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
+}
+
+model BlogPost {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  excerpt     String?  @db.Text
+  content     String   @db.Text
+  image       String?
+  category    String?
+  publishedAt DateTime @default(now())
+  createdAt   DateTime @default(now())
+}
+
+model VideoCard {
+  id       String  @id @default(cuid())
+  title    String
+  thumb    String?
+  videoUrl String?
+  order    Int     @default(0)
+}
+
+model BannerAd {
+  id       String  @id @default(cuid())
+  vendorId String?
+  title    String
+  image    String
+  link     String?
+  position Int     @default(0)
+  isActive Boolean @default(true)
+
+  vendor Vendor? @relation(fields: [vendorId], references: [id])
+}
