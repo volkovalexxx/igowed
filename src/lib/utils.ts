@@ -9,7 +9,7 @@ export function fmtNumber(n: number) {
 export function initials(name: string) {
   return name
     .split(' ')
-    .map((w) => w[0])
+    .map((word) => word[0])
     .join('')
     .toUpperCase()
     .slice(0, 2)
@@ -18,6 +18,6 @@ export function initials(name: string) {
 export function slugify(str: string) {
   return str
     .toLowerCase()
-    .replace(/[^a-zа-я0-9]+/gi, '-')
+    .replace(/[^a-zа-яё0-9]+/gi, '-')
     .replace(/^-|-$/g, '')
 }

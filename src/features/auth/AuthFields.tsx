@@ -15,6 +15,7 @@ type AuthPasswordFieldProps = {
   name?: string
   placeholder?: string
   autoComplete?: string
+  minLength?: number
 }
 
 export function AuthTextField({ name, type = 'text', placeholder, autoComplete, required }: AuthTextFieldProps) {
@@ -36,6 +37,7 @@ export function AuthPasswordField({
   name = 'password',
   placeholder = 'Пароль',
   autoComplete = 'current-password',
+  minLength,
 }: AuthPasswordFieldProps) {
   const [visible, setVisible] = useState(false)
 
@@ -47,6 +49,7 @@ export function AuthPasswordField({
         type={visible ? 'text' : 'password'}
         placeholder={placeholder}
         autoComplete={autoComplete}
+        minLength={minLength}
         required
       />
       <button
