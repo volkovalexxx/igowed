@@ -30,10 +30,10 @@ Install dependencies:
 npm install
 ```
 
-Start infrastructure:
+Start the full local stack:
 
 ```bash
-docker compose up -d postgres minio
+docker compose up -d --build
 ```
 
 Apply database schema:
@@ -42,7 +42,20 @@ Apply database schema:
 npm run db:push
 ```
 
-Run frontend and API together:
+The Docker stack runs web, API, PostgreSQL, and MinIO:
+
+- Web: http://localhost:3000
+- API: http://localhost:4000/api/v1
+- API health: http://localhost:4000/api/v1/health
+- MinIO console: http://localhost:9001
+
+Stop the stack:
+
+```bash
+docker compose down
+```
+
+To run frontend and API directly with Node instead of Docker:
 
 ```bash
 npm run dev
@@ -54,13 +67,6 @@ Or run separately:
 npm run dev:web
 npm run dev:api
 ```
-
-URLs:
-
-- Web: http://localhost:3000
-- API: http://localhost:4000/api/v1
-- API health: http://localhost:4000/api/v1/health
-- MinIO console: http://localhost:9001
 
 ## Checks
 

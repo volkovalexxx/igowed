@@ -64,6 +64,35 @@ services:
       - ./apps/api/src:/app/apps/api/src
       - ./apps/api/test:/app/apps/api/test
 
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    container_name: igowed-web
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      api:
+        condition: service_started
+    environment:
+      NODE_ENV: development
+      NEXT_TELEMETRY_DISABLED: 1
+      NEXTAUTH_SECRET: change-me-before-production
+      NEXTAUTH_URL: http://localhost:3000
+      NEXT_PUBLIC_API_URL: http://localhost:4000/api/v1
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/igowed?schema=public
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./src:/app/src
+      - ./public:/app/public
+      - ./prisma:/app/prisma
+      - ./next.config.ts:/app/next.config.ts
+      - ./tsconfig.json:/app/tsconfig.json
+      - ./postcss.config.mjs:/app/postcss.config.mjs
+      - ./eslint.config.mjs:/app/eslint.config.mjs
+
 volumes:
   postgres-data:
   minio-data:
