@@ -67,6 +67,25 @@
   padding: 48px 24px 96px;
 }
 
+.cover {
+  width: 100%;
+  aspect-ratio: 16 / 7;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  background-color: #f3f3f3;
+  background-position: center;
+  background-size: cover;
+}
+
+.coverEmpty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9a9a9a;
+  font-size: 14px;
+  font-weight: 800;
+}
+
 .hero {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 300px;
@@ -189,6 +208,11 @@
 
   .content {
     padding: 28px 16px 70px;
+  }
+
+  .cover {
+    aspect-ratio: 4 / 3;
+    margin-bottom: 16px;
   }
 
   .hero {
