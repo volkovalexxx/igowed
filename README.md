@@ -49,6 +49,16 @@ The Docker stack runs web, API, PostgreSQL, and MinIO:
 - API health: http://localhost:4000/api/v1/health
 - MinIO console: http://localhost:9001
 
+Create a direct media upload URL:
+
+```bash
+curl -X POST http://localhost:4000/api/v1/media/uploads \
+  -H "Content-Type: application/json" \
+  -d "{\"ownerType\":\"event\",\"ownerId\":\"event-1\",\"fileName\":\"cover.webp\",\"contentType\":\"image/webp\",\"sizeBytes\":2048}"
+```
+
+The response contains a `PUT` `uploadUrl`, public URL, object key, required headers, TTL, and max file size.
+
 Stop the stack:
 
 ```bash
