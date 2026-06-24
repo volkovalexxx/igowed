@@ -65,6 +65,11 @@
   color: #fff;
 }
 
+.goldButton:disabled {
+  cursor: progress;
+  opacity: 0.68;
+}
+
 .darkButton {
   background: var(--dark);
   color: #fff;
@@ -175,6 +180,24 @@
 
 .form {
   max-width: 650px;
+}
+
+.formNotice,
+.formError {
+  margin: -8px 0 22px;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.formNotice {
+  color: #777;
+}
+
+.formError {
+  border-radius: 12px;
+  padding: 10px 14px;
+  background: #fff1f1;
+  color: #ad2222;
 }
 
 .title {
@@ -305,7 +328,8 @@
 }
 
 .segment,
-.chip {
+.chip,
+.chipButton {
   min-height: 32px;
   border-radius: 999px;
   background: #f2f2f2;
@@ -539,6 +563,7 @@
   }
 
   .chip,
+  .chipButton,
   .segment {
     min-height: 30px;
     padding: 0 14px;

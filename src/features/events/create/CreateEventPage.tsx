@@ -1,6 +1,17 @@
+'use client'
+
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { FormEvent, ReactNode, useState } from 'react'
 import styles from './CreateEvent.module.css'
 import { eventAtmospheres, eventFormats, eventWorkspaceTabs } from './createEvent.constants'
+
+type CreateEventResponse = {
+  event?: {
+    id: string
+  }
+  error?: string
+}
 
 function IconImage() {
   return (
@@ -83,7 +94,7 @@ function Header() {
   )
 }
 
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
+function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
     <label className={styles.field}>
       <span className={styles.label}>{label}</span>
@@ -92,25 +103,22 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   )
 }
 
-function TextInput({ placeholder, icon, type = 'text' }: { placeholder: string; icon?: React.ReactNode; type?: string }) {
+function TextInput({
+  name,
+  placeholder,
+  icon,
+  type = 'text',
+}: {
+  name: string
+  placeholder: string
+  icon?: ReactNode
+  type?: string
+}) {
   return (
     <span className={styles.inputWrap}>
-      <input className={styles.input} placeholder={placeholder} type={type} />
+      <input className={styles.input} name={name} placeholder={placeholder} type={type} />
       {icon}
     </span>
-  )
-}
-
-function Pill({ children, active = false }: { children: React.ReactNode; active?: boolean }) {
-  return <span className={`${styles.chip} ${active ? styles.chipActive : ''}`}>{children}</span>
-}
-
-function Segmented({ first, second }: { first: string; second: string }) {
-  return (
-    <div className={styles.segmented}>
-      <span className={`${styles.segment} ${styles.segmentActive}`}>{first}</span>
-      <span className={styles.segment}>{second}</span>
-    </div>
   )
 }
 
@@ -148,7 +156,74 @@ function Footer() {
   )
 }
 
+function formValue(formData: FormData, name: string) {
+  return formData.get(name)?.toString().trim() ?? ''
+}
+
+function numberValue(formData: FormData, name: string) {
+  const value = formValue(formData, name)
+  return value.length > 0 ? value : undefined
+}
+
 export function CreateEventPage() {
+  const router = useRouter()
+  const [selectedFormat, setSelectedFormat] = useState(eventFormats[0])
+  const [selectedAtmospheres, setSelectedAtmospheres] = useState<string[]>([eventAtmospheres[0]])
+  const [error, setError] = useState('')
+  const [isSubmitting, setSubmitting] = useState(false)
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    setError('')
+    setSubmitting(true)
+
+    const formData = new FormData(event.currentTarget)
+    const payload = {
+      eventType: formValue(formData, 'eventType'),
+      title: formValue(formData, 'title'),
+      eventDate: formValue(formData, 'eventDate'),
+      eventTime: formValue(formData, 'eventTime'),
+      country: formValue(formData, 'country'),
+      city: formValue(formData, 'city'),
+      brideName: formValue(formData, 'brideName'),
+      groomName: formValue(formData, 'groomName'),
+      guestMin: numberValue(formData, 'guestMin'),
+      guestMax: numberValue(formData, 'guestMax'),
+      budgetMin: numberValue(formData, 'budgetMin'),
+      budgetMax: numberValue(formData, 'budgetMax'),
+      format: selectedFormat,
+      atmospheres: selectedAtmospheres,
+      notes: formValue(formData, 'notes'),
+    }
+
+    try {
+      const response = await fetch('/api/events', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+      const result = (await response.json()) as CreateEventResponse
+
+      if (!response.ok || !result.event?.id) {
+        setError(result.error ?? 'Не удалось создать мероприятие')
+        return
+      }
+
+      router.push(`/event/${result.event.id}`)
+      router.refresh()
+    } catch {
+      setError('Не удалось связаться с сервером')
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  function toggleAtmosphere(atmosphere: string) {
+    setSelectedAtmospheres((current) =>
+      current.includes(atmosphere) ? current.filter((item) => item !== atmosphere) : [...current, atmosphere],
+    )
+  }
+
   return (
     <div className={styles.page}>
       <Header />
@@ -162,15 +237,17 @@ export function CreateEventPage() {
           </button>
         </aside>
 
-        <form className={styles.form}>
+        <form className={styles.form} onSubmit={handleSubmit}>
           <h1 className={styles.title}>Создать мероприятие</h1>
+          <p className={styles.formNotice}>Заполните базовые данные. После создания откроется рабочая карточка события.</p>
+          {error ? <p className={styles.formError}>{error}</p> : null}
 
           <section className={styles.section}>
             <h2 className={styles.sectionTitle}>Общие данные</h2>
             <div className={styles.gridTwo}>
               <Field label="Тип мероприятия">
                 <span className={styles.inputWrap}>
-                  <select className={styles.select} defaultValue="Свадьба">
+                  <select className={styles.select} defaultValue="Свадьба" name="eventType">
                     <option>Свадьба</option>
                     <option>День рождения</option>
                     <option>Корпоратив</option>
@@ -180,19 +257,19 @@ export function CreateEventPage() {
                 </span>
               </Field>
               <Field label="Название мероприятия">
-                <TextInput placeholder="Введите название" />
+                <TextInput name="title" placeholder="Введите название" />
               </Field>
               <Field label="Дата">
-                <TextInput icon={<IconCalendar />} placeholder="Выберите дату" />
+                <TextInput icon={<IconCalendar />} name="eventDate" placeholder="Выберите дату" type="date" />
               </Field>
               <Field label="Время">
-                <TextInput placeholder="Введите время" />
+                <TextInput name="eventTime" placeholder="Введите время" type="time" />
               </Field>
               <Field label="Страна">
-                <TextInput icon={<IconPin />} placeholder="Выберите страну" />
+                <TextInput icon={<IconPin />} name="country" placeholder="Выберите страну" />
               </Field>
               <Field label="Город">
-                <TextInput placeholder="Введите название" />
+                <TextInput name="city" placeholder="Введите название" />
               </Field>
             </div>
           </section>
@@ -201,10 +278,10 @@ export function CreateEventPage() {
             <h2 className={styles.sectionTitle}>Участники мероприятия</h2>
             <div className={styles.participants}>
               <Field label="Невеста">
-                <TextInput placeholder="Введите имя" />
+                <TextInput name="brideName" placeholder="Введите имя" />
               </Field>
               <Field label="Жених">
-                <TextInput placeholder="Введите имя" />
+                <TextInput name="groomName" placeholder="Введите имя" />
               </Field>
               <button className={styles.addParticipant} type="button">
                 Добавить участника <span className={styles.plusDot}>+</span>
@@ -217,30 +294,41 @@ export function CreateEventPage() {
             <div className={styles.optionRow}>
               <div>
                 <p className={styles.label}>Количество гостей</p>
-                <Segmented first="Диапазон" second="Точное количество" />
+                <div className={styles.segmented}>
+                  <span className={`${styles.segment} ${styles.segmentActive}`}>Диапазон</span>
+                  <span className={styles.segment}>Точное количество</span>
+                </div>
               </div>
               <div className={styles.rangeGrid}>
-                <TextInput placeholder="От" />
-                <TextInput placeholder="До" />
+                <TextInput name="guestMin" placeholder="От" type="number" />
+                <TextInput name="guestMax" placeholder="До" type="number" />
               </div>
             </div>
             <div className={styles.optionRow}>
               <div>
                 <p className={styles.label}>Бюджет</p>
-                <Segmented first="Диапазон" second="Точная сумма" />
+                <div className={styles.segmented}>
+                  <span className={`${styles.segment} ${styles.segmentActive}`}>Диапазон</span>
+                  <span className={styles.segment}>Точная сумма</span>
+                </div>
               </div>
               <div className={styles.rangeGrid}>
-                <TextInput placeholder="От" />
-                <TextInput placeholder="До" />
+                <TextInput name="budgetMin" placeholder="От" type="number" />
+                <TextInput name="budgetMax" placeholder="До" type="number" />
               </div>
             </div>
             <div className={styles.section}>
               <p className={styles.label}>Формат</p>
               <div className={styles.chips}>
-                {eventFormats.map((format, index) => (
-                  <Pill active={index === 0} key={format}>
+                {eventFormats.map((format) => (
+                  <button
+                    className={`${styles.chipButton} ${format === selectedFormat ? styles.chipActive : ''}`}
+                    key={format}
+                    onClick={() => setSelectedFormat(format)}
+                    type="button"
+                  >
                     {format}
-                  </Pill>
+                  </button>
                 ))}
               </div>
             </div>
@@ -250,10 +338,15 @@ export function CreateEventPage() {
             <h2 className={styles.sectionTitle}>Дополнительные сведения</h2>
             <p className={styles.label}>Атмосфера</p>
             <div className={styles.chips}>
-              {eventAtmospheres.map((atmosphere, index) => (
-                <Pill active={index === 0} key={atmosphere}>
+              {eventAtmospheres.map((atmosphere) => (
+                <button
+                  className={`${styles.chipButton} ${selectedAtmospheres.includes(atmosphere) ? styles.chipActive : ''}`}
+                  key={atmosphere}
+                  onClick={() => toggleAtmosphere(atmosphere)}
+                  type="button"
+                >
                   {atmosphere}
-                </Pill>
+                </button>
               ))}
             </div>
           </section>
@@ -262,7 +355,8 @@ export function CreateEventPage() {
             <Field label="Комментарии и особые пожелания">
               <textarea
                 className={styles.textarea}
-                defaultValue="Профессиональная съёмка мероприятий по всей Европе. Сохраняю атмосферу вашего события в каждом кадре"
+                defaultValue="Профессиональная съемка мероприятий по всей Европе. Сохраняю атмосферу вашего события в каждом кадре"
+                name="notes"
               />
             </Field>
           </section>
@@ -280,8 +374,8 @@ export function CreateEventPage() {
           </section>
 
           <div className={styles.formActions}>
-            <button className={styles.goldButton} type="submit">
-              Создать мероприятие
+            <button className={styles.goldButton} disabled={isSubmitting} type="submit">
+              {isSubmitting ? 'Создаем...' : 'Создать мероприятие'}
             </button>
             <Link className={styles.ghostButton} href="/">
               Отменить
