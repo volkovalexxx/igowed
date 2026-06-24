@@ -1,10 +1,10 @@
-import type { Metadata } from "next";
-import "./globals.css";
+import type { Metadata } from 'next'
+import './globals.css'
 
 export const metadata: Metadata = {
-  title: "I GO WED — свадебный маркетплейс",
-  description: "Найдите лучших подрядчиков для вашего мероприятия",
-};
+  title: 'I GO WED — свадебный маркетплейс',
+  description: 'Найдите лучших подрядчиков для вашего мероприятия',
+}
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -19,5 +19,5 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="min-h-full flex flex-col antialiased">{children}</body>
     </html>
-  );
+  )
 }
