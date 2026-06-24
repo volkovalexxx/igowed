@@ -17,10 +17,7 @@ export async function POST(req: NextRequest) {
     }
 
     if (!email || !password || !name || !role) {
-      return NextResponse.json(
-        { error: 'Поля email, password, name и role обязательны' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Поля email, password, name и role обязательны' }, { status: 400 })
     }
 
     if (!['CLIENT', 'VENDOR'].includes(role)) {
@@ -29,10 +26,7 @@ export async function POST(req: NextRequest) {
 
     const existing = await prisma.user.findUnique({ where: { email } })
     if (existing) {
-      return NextResponse.json(
-        { error: 'Пользователь с таким email уже существует' },
-        { status: 409 }
-      )
+      return NextResponse.json({ error: 'Пользователь с таким email уже существует' }, { status: 409 })
     }
 
     const hashedPassword = await bcrypt.hash(password, 12)
@@ -58,7 +52,6 @@ export async function POST(req: NextRequest) {
       const firstName = nameParts[0] ?? name
       const lastName = nameParts.slice(1).join(' ') || firstName
 
-      // Build a unique slug
       const baseSlug = slugify(name) || `vendor-${user.id.slice(0, 8)}`
       let slug = baseSlug
       let attempt = 0
@@ -67,7 +60,6 @@ export async function POST(req: NextRequest) {
         slug = `${baseSlug}-${attempt}`
       }
 
-      // Build a unique username
       const baseUsername = slugify(name).replace(/-/g, '_') || `user_${user.id.slice(0, 8)}`
       let username = baseUsername
       let uAttempt = 0

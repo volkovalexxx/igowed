@@ -8,7 +8,7 @@ import { AuthShell } from '@/features/auth/AuthShell'
 import { AuthLegal, AuthTabs, SocialButtons } from '@/features/auth/AuthShared'
 import styles from '@/features/auth/AuthShell.module.css'
 
-export default function LoginPage() {
+export default function RegisterEmailPage() {
   const router = useRouter()
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
@@ -19,25 +19,31 @@ export default function LoginPage() {
     setLoading(true)
 
     const form = new FormData(event.currentTarget)
-    const email = String(form.get('login') ?? '')
+    const email = String(form.get('email') ?? '')
     const password = String(form.get('password') ?? '')
 
     try {
-      const result = await signIn('credentials', {
-        email,
-        password,
-        redirect: false,
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          password,
+          name: email.split('@')[0],
+          role: 'CLIENT',
+        }),
       })
 
-      if (result?.error) {
-        setError('Неверный логин или пароль')
+      if (!response.ok) {
+        const data = await response.json().catch(() => null)
+        setError(data?.error ?? 'Не удалось зарегистрироваться')
         return
       }
 
-      router.push('/')
-      router.refresh()
+      await signIn('credentials', { email, password, redirect: false })
+      router.push('/register/welcome?role=client')
     } catch {
-      setError('Не удалось войти. Попробуйте еще раз.')
+      setError('Не удалось зарегистрироваться. Попробуйте еще раз.')
     } finally {
       setLoading(false)
     }
@@ -47,18 +53,21 @@ export default function LoginPage() {
     <AuthShell>
       <section className={styles.formArea}>
         <h2 className={styles.title}>Добро пожаловать!</h2>
-        <AuthTabs active="login" />
+        <AuthTabs active="register" />
 
         <form className={styles.form} onSubmit={handleSubmit}>
-          <AuthTextField name="login" placeholder="Логин" autoComplete="email" required />
-          <AuthPasswordField />
+          <AuthTextField
+            name="email"
+            type="email"
+            placeholder="Адрес электронной почты"
+            autoComplete="email"
+            required
+          />
+          <AuthPasswordField autoComplete="new-password" />
           {error && <p className={styles.error}>{error}</p>}
-          <button className={`${styles.button} ${styles.buttonNarrow}`} disabled={loading} type="submit">
-            {loading ? 'Входим...' : 'Войти'}
+          <button className={styles.button} disabled={loading} type="submit">
+            {loading ? 'Создаем...' : 'Продолжить'}
           </button>
-          <a className={styles.forgot} href="#">
-            Забыли пароль?
-          </a>
         </form>
 
         <SocialButtons />
