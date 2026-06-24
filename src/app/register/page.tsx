@@ -28,7 +28,7 @@ export default function RegisterPhonePage() {
             <PhoneField />
             <p className={styles.fieldHint}>На этот номер вы получите SMS с кодом подтверждения</p>
           </div>
-          <AuthPasswordField autoComplete="new-password" />
+          <AuthPasswordField autoComplete="new-password" minLength={8} />
           <button className={styles.button} disabled={loading} type="submit">
             {loading ? 'Отправляем...' : 'Продолжить'}
           </button>

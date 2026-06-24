@@ -63,7 +63,7 @@ export default function RegisterEmailPage() {
             autoComplete="email"
             required
           />
-          <AuthPasswordField autoComplete="new-password" />
+          <AuthPasswordField autoComplete="new-password" minLength={8} />
           {error && <p className={styles.error}>{error}</p>}
           <button className={styles.button} disabled={loading} type="submit">
             {loading ? 'Создаем...' : 'Продолжить'}
