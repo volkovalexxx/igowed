@@ -27,7 +27,7 @@ function Header() {
         </Link>
         <nav className={styles.nav} aria-label="Основная навигация">
           <Link href="/">Главная</Link>
-          <Link href="/catalog?cat=venues">Площадки</Link>
+          <Link href="/event">Мои мероприятия</Link>
           <Link href="/catalog">Каталог</Link>
           <Link href="/blog">Блог</Link>
         </nav>
@@ -72,8 +72,8 @@ export function EventDetailsPage({ event }: { event: EventRecord }) {
               <span className={styles.statValue}>{event.format || 'Не выбран'}</span>
               <span className={styles.statLabel}>Формат</span>
             </div>
-            <Link className={styles.ghostButton} href="/event/new">
-              Создать еще
+            <Link className={styles.ghostButton} href="/event">
+              К списку
             </Link>
           </aside>
         </section>

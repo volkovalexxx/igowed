@@ -43,4 +43,6 @@ export type EventRecord = {
 
 export type EventDeps = {
   createEvent(input: CreateEventInput): Promise<EventRecord>
+  findEventById?(userId: string, eventId: string): Promise<EventRecord | null>
+  listEvents?(userId: string): Promise<EventRecord[]>
 }

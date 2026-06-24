@@ -1,15 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
-import prisma from '@/lib/prisma'
+import { eventRepository } from '@/features/events/server/event.repository'
 import { createEventForUser, isEventError } from '@/features/events/server/event.service'
-import type { EventDeps } from '@/features/events/server/event.types'
-
-const eventDeps: EventDeps = {
-  createEvent: (input) =>
-    prisma.event.create({
-      data: input,
-    }),
-}
 
 export async function POST(req: NextRequest) {
   try {
@@ -18,7 +10,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Требуется авторизация' }, { status: 401 })
     }
 
-    const event = await createEventForUser(session.user.id, await req.json(), eventDeps)
+    const event = await createEventForUser(session.user.id, await req.json(), eventRepository)
     return NextResponse.json({ event }, { status: 201 })
   } catch (err) {
     if (isEventError(err)) {

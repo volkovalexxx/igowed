@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { parseCreateEventInput, EventValidationError } from './event.validation'
+import { EventValidationError, parseCreateEventInput } from './event.validation'
 
 describe('parseCreateEventInput', () => {
   it('normalizes create event input', () => {
@@ -15,7 +15,7 @@ describe('parseCreateEventInput', () => {
         budgetMin: '10000',
         budgetMax: '150000',
         atmospheres: [' Романтичная ', '', 'Элегантная'],
-      })
+      }),
     ).toMatchObject({
       userId: 'user-1',
       eventType: 'Свадьба',
@@ -40,7 +40,7 @@ describe('parseCreateEventInput', () => {
         title: 'Свадьба',
         guestMin: 100,
         guestMax: 20,
-      })
+      }),
     ).toThrow(EventValidationError)
   })
 })
