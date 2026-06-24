@@ -1,0 +1,17 @@
+node_modules
+**/node_modules
+.next
+out
+build
+coverage
+.git
+.github
+.vercel
+*.log
+.env*
+!.env.example
+next-env.d.ts
+*.tsbuildinfo
+apps/api/dist
+src/generated/prisma
+reference-image

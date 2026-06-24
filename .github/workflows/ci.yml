@@ -52,3 +52,6 @@ jobs:
 
       - name: Test API
         run: npm run test
+
+      - name: Build Docker images
+        run: docker compose build web api
