@@ -4,6 +4,7 @@ import Fastify, { type FastifyInstance } from 'fastify'
 import { loadEnv, type ApiEnv } from './config/env.js'
 import { registerCatalogRoutes } from './modules/catalog/catalog.routes.js'
 import { registerHealthRoutes } from './modules/health/health.routes.js'
+import { registerHomeRoutes } from './modules/home/home.routes.js'
 
 export type BuildServerOptions = {
   env?: ApiEnv
@@ -28,6 +29,7 @@ export async function buildServer(options: BuildServerOptions = {}): Promise<Fas
 
   await registerHealthRoutes(app, appEnv)
   await registerCatalogRoutes(app)
+  await registerHomeRoutes(app)
 
   return app
 }
