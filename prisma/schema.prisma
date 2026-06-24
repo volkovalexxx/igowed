@@ -39,11 +39,40 @@ model User {
   updatedAt     DateTime  @updatedAt
 
   vendor           Vendor?
+  events           Event[]
   bookings         Booking[]
   favorites        Favorite[]
   reviews          Review[]
   sentMessages     Message[] @relation("SentMessages")
   receivedMessages Message[] @relation("ReceivedMessages")
+}
+
+model Event {
+  id          String   @id @default(cuid())
+  userId      String
+  eventType   String
+  title       String
+  eventDate   DateTime?
+  eventTime   String?
+  country     String?
+  city        String?
+  brideName   String?
+  groomName   String?
+  guestMin    Int?
+  guestMax    Int?
+  budgetMin   Int?
+  budgetMax   Int?
+  format      String?
+  atmospheres String[] @default([])
+  notes       String?  @db.Text
+  coverUrl    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([eventDate])
 }
 
 model Vendor {
