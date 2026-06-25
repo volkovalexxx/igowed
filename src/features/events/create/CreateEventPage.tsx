@@ -2,7 +2,8 @@
 
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { ChangeEvent, FormEvent, ReactNode, useState } from 'react'
+import type { ChangeEvent, FormEvent, ReactNode } from 'react'
+import { useState } from 'react'
 import styles from './CreateEvent.module.css'
 import { eventAtmospheres, eventFormats, eventWorkspaceTabs } from './createEvent.constants'
 import { uploadEventCover } from './createEventUpload'
@@ -14,9 +15,9 @@ type CreateEventResponse = {
   error?: string
 }
 
-function IconImage() {
+function IconImage({ className }: { className?: string }) {
   return (
-    <svg className={styles.uploadIcon} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <svg className={className ?? styles.uploadIcon} viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path d="M4 18h16L15 11l-4 5-3-3-4 5Z" fill="currentColor" />
       <circle cx="9" cy="8" r="2" fill="currentColor" />
     </svg>
@@ -35,12 +36,16 @@ function IconCalendar() {
 function IconPin() {
   return (
     <svg className={styles.fieldIcon} viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path
-        d="M12 21s7-5.2 7-11a7 7 0 1 0-14 0c0 5.8 7 11 7 11Z"
-        stroke="currentColor"
-        strokeWidth="1.8"
-      />
+      <path d="M12 21s7-5.2 7-11a7 7 0 1 0-14 0c0 5.8 7 11 7 11Z" stroke="currentColor" strokeWidth="1.8" />
       <circle cx="12" cy="10" r="2.4" stroke="currentColor" strokeWidth="1.8" />
+    </svg>
+  )
+}
+
+function IconFolder() {
+  return (
+    <svg className={styles.buttonIcon} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M3 7.5A2.5 2.5 0 0 1 5.5 5H10l2 2h6.5A2.5 2.5 0 0 1 21 9.5v7A2.5 2.5 0 0 1 18.5 19h-13A2.5 2.5 0 0 1 3 16.5v-9Z" fill="currentColor" />
     </svg>
   )
 }
@@ -70,7 +75,7 @@ function Header() {
               ⌕
             </button>
             <button className={styles.iconButton} type="button" aria-label="Уведомления">
-              ♡<span className={styles.badge}>123</span>
+              ♡<span className={styles.badge}>12</span>
             </button>
             <button className={`${styles.iconButton} ${styles.mailButton}`} type="button" aria-label="Сообщения">
               ✉<span className={styles.badge}>1</span>
@@ -79,6 +84,11 @@ function Header() {
               <span className={styles.avatarCircle}>O</span>
               <span>Ольга</span>
             </Link>
+            <button className={styles.menuButton} type="button" aria-label="Меню">
+              <span />
+              <span />
+              <span />
+            </button>
           </div>
         </div>
       </header>
@@ -92,6 +102,40 @@ function Header() {
         </div>
       </nav>
     </>
+  )
+}
+
+function Footer() {
+  return (
+    <footer className={styles.footer}>
+      <div className={styles.footerInner}>
+        <div>
+          <p className={styles.footerLogo}>I GO WED</p>
+          <div className={styles.footerLinks}>
+            <Link href="#">Правила</Link>
+            <Link href="#">Обратная связь</Link>
+            <Link href="#">О нас</Link>
+          </div>
+        </div>
+        <div className={styles.footerLinks}>
+          <Link href="#">Реклама</Link>
+          <Link href="#">Логотипы I GO WED</Link>
+          <Link href="#">Политика конфиденциальности</Link>
+        </div>
+        <div className={styles.footerPills}>
+          <span className={styles.footerPill}>
+            <span>USD&nbsp;&nbsp; Доллар США</span>
+            <span>⌄</span>
+          </span>
+          <span className={styles.footerPill}>
+            <span>🇷🇺&nbsp;&nbsp; Русский</span>
+            <span>⌄</span>
+          </span>
+        </div>
+        <div className={styles.age}>18+</div>
+      </div>
+      <div className={styles.copyright}>©2025 Сообщество свадебных и семейных фотографов | I GO WED</div>
+    </footer>
   )
 }
 
@@ -120,40 +164,6 @@ function TextInput({
       <input className={styles.input} name={name} placeholder={placeholder} type={type} />
       {icon}
     </span>
-  )
-}
-
-function Footer() {
-  return (
-    <footer className={styles.footer}>
-      <div className={styles.footerInner}>
-        <div>
-          <p className={styles.footerLogo}>I GO WED</p>
-          <div className={styles.footerLinks}>
-            <Link href="#">Правила</Link>
-            <Link href="#">Обратная связь</Link>
-            <Link href="#">О нас</Link>
-          </div>
-        </div>
-        <div className={styles.footerLinks}>
-          <Link href="#">Реклама</Link>
-          <Link href="#">Логотипы I GO WED</Link>
-          <Link href="#">Политика конфиденциальности</Link>
-        </div>
-        <div className={styles.footerPills}>
-          <span className={styles.footerPill}>
-            <span>USD&nbsp;&nbsp; Доллар США</span>
-            <span>⌄</span>
-          </span>
-          <span className={styles.footerPill}>
-            <span>RU&nbsp;&nbsp; Русский</span>
-            <span>⌄</span>
-          </span>
-        </div>
-        <div className={styles.age}>18+</div>
-      </div>
-      <div className={styles.copyright}>©2025 Сообщество свадебных и семейных фотографов | I GO WED</div>
-    </footer>
   )
 }
 
@@ -264,6 +274,13 @@ export function CreateEventPage() {
     <div className={styles.page}>
       <Header />
       <main className={styles.content}>
+        <div className={styles.mobileTitleRow}>
+          <Link href="/event" aria-label="Назад">
+            ‹
+          </Link>
+          <h1>Создать Мероприятие</h1>
+        </div>
+
         <aside className={styles.mediaColumn}>
           <label className={styles.uploadBox}>
             {coverPreviewUrl ? (
@@ -274,7 +291,8 @@ export function CreateEventPage() {
             <input accept="image/avif,image/jpeg,image/png,image/webp" className={styles.fileInput} onChange={handleCoverChange} type="file" />
           </label>
           <label className={`${styles.darkButton} ${styles.uploadButton} ${isUploading ? styles.buttonDisabled : ''}`}>
-            ▣ {isUploading ? 'Загрузка...' : 'Загрузить фото'}
+            <IconImage className={styles.buttonIcon} />
+            {isUploading ? 'Загрузка...' : 'Загрузить фото'}
             <input accept="image/avif,image/jpeg,image/png,image/webp" className={styles.fileInput} disabled={isUploading} onChange={handleCoverChange} type="file" />
           </label>
           {uploadStatus ? <p className={styles.uploadStatus}>{uploadStatus}</p> : null}
@@ -282,7 +300,6 @@ export function CreateEventPage() {
 
         <form className={styles.form} onSubmit={handleSubmit}>
           <h1 className={styles.title}>Создать мероприятие</h1>
-          <p className={styles.formNotice}>Заполните базовые данные. После создания откроется рабочая карточка события.</p>
           {error ? <p className={styles.formError}>{error}</p> : null}
 
           <section className={styles.section}>
@@ -296,7 +313,7 @@ export function CreateEventPage() {
                     <option>Корпоратив</option>
                     <option>Вечеринка</option>
                   </select>
-                  <span>⌄</span>
+                  <span className={styles.selectArrow}>⌄</span>
                 </span>
               </Field>
               <Field label="Название мероприятия">
@@ -360,7 +377,7 @@ export function CreateEventPage() {
                 <TextInput name="budgetMax" placeholder="До" type="number" />
               </div>
             </div>
-            <div className={styles.section}>
+            <div className={styles.subsection}>
               <p className={styles.label}>Формат</p>
               <div className={styles.chips}>
                 {eventFormats.map((format) => (
@@ -398,7 +415,7 @@ export function CreateEventPage() {
             <Field label="Комментарии и особые пожелания">
               <textarea
                 className={styles.textarea}
-                defaultValue="Профессиональная съемка мероприятий по всей Европе. Сохраняю атмосферу вашего события в каждом кадре"
+                defaultValue="Профессиональная съёмка мероприятий по всей Европе. Сохраняю атмосферу вашего события в каждом кадре"
                 name="notes"
               />
             </Field>
@@ -408,17 +425,17 @@ export function CreateEventPage() {
             <p className={styles.label}>Референсы</p>
             <div className={styles.referenceActions}>
               <button className={styles.darkButton} type="button">
-                ▣ Создать папку
+                <IconFolder /> Создать папку
               </button>
               <button className={styles.darkButton} type="button">
-                ▣ Загрузить фото
+                <IconImage className={styles.buttonIcon} /> Загрузить фото
               </button>
             </div>
           </section>
 
           <div className={styles.formActions}>
             <button className={styles.goldButton} disabled={isSubmitting || isUploading} type="submit">
-              {isSubmitting ? 'Создаем...' : 'Создать мероприятие'}
+              {isSubmitting ? 'Создаём...' : 'Создать мероприятие'}
             </button>
             <Link className={styles.ghostButton} href="/event">
               Отменить
