@@ -38,6 +38,7 @@ export type CreateMediaAssetInput = CreateUploadRequest & {
 
 export type MediaRepository = {
   createAsset(input: CreateMediaAssetInput): Promise<MediaAssetRecord>
+  updateAssetStatus(id: string, status: MediaAssetRecord['status']): Promise<MediaAssetRecord | undefined>
 }
 
 export type PresignedUpload = {

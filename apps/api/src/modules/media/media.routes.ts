@@ -4,7 +4,7 @@ import { createMediaRepository } from './media.repository.js'
 import { createPresignedUpload } from './media.service.js'
 import { createMediaStorage } from './media.storage.js'
 import type { MediaRepository, MediaStorage } from './media.types.js'
-import { MediaValidationError } from './media.validation.js'
+import { MediaValidationError, parseMediaAssetId } from './media.validation.js'
 
 export async function registerMediaRoutes(
   app: FastifyInstance,
@@ -25,6 +25,32 @@ export async function registerMediaRoutes(
 
       app.log.error(error)
       return reply.status(503).send({ error: 'Хранилище медиа недоступно' })
+    }
+  })
+
+  app.post('/api/v1/media/assets/:assetId/complete', async (request, reply) => {
+    try {
+      const repository = repositoryOverride ?? createMediaRepository(env)
+
+      if (!repository) {
+        return reply.status(503).send({ error: 'Медиа-метаданные недоступны' })
+      }
+
+      const assetId = parseMediaAssetId(request.params)
+      const asset = await repository.updateAssetStatus(assetId, 'READY')
+
+      if (!asset) {
+        return reply.status(404).send({ error: 'Медиа не найдено' })
+      }
+
+      return reply.status(200).send({ asset })
+    } catch (error) {
+      if (error instanceof MediaValidationError) {
+        return reply.status(error.statusCode).send({ error: error.message })
+      }
+
+      app.log.error(error)
+      return reply.status(503).send({ error: 'Медиа-метаданные недоступны' })
     }
   })
 }

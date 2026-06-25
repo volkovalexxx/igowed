@@ -20,6 +20,10 @@ const uploadRequestSchema = z.object({
   sizeBytes: z.number().int().positive().max(MAX_UPLOAD_SIZE_BYTES),
 })
 
+const mediaAssetParamsSchema = z.object({
+  assetId: z.string().trim().min(1).max(120),
+})
+
 export function parseUploadRequest(raw: unknown): CreateUploadRequest {
   const result = uploadRequestSchema.safeParse(raw)
 
@@ -28,4 +32,14 @@ export function parseUploadRequest(raw: unknown): CreateUploadRequest {
   }
 
   return result.data
+}
+
+export function parseMediaAssetId(raw: unknown): string {
+  const result = mediaAssetParamsSchema.safeParse(raw)
+
+  if (!result.success) {
+    throw new MediaValidationError('Некорректный идентификатор медиа')
+  }
+
+  return result.data.assetId
 }
