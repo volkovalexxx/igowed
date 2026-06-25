@@ -60,6 +60,12 @@ curl -X POST http://localhost:4000/api/v1/media/uploads \
 The response contains a `PUT` `uploadUrl`, public URL, object key, required headers, TTL, max file size, and a pending
 media asset record for later gallery/reference workflows.
 
+After a successful `PUT`, mark the asset as ready:
+
+```bash
+curl -X POST http://localhost:4000/api/v1/media/assets/asset-1/complete
+```
+
 Stop the stack:
 
 ```bash

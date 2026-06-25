@@ -21,6 +21,21 @@ const fakeRepository: MediaRepository = {
     status: input.status,
     createdAt: '2026-06-25T00:00:00.000Z',
   }),
+  updateAssetStatus: async (id, status) =>
+    id === 'asset-1'
+      ? {
+          id,
+          ownerType: 'event',
+          ownerId: 'event-1',
+          objectKey: 'event/event-1/original/upload.webp',
+          publicUrl: 'http://localhost:9000/igowed-media/event/event-1/original/upload.webp',
+          fileName: 'cover.webp',
+          contentType: 'image/webp',
+          sizeBytes: 2048,
+          status,
+          createdAt: '2026-06-25T00:00:00.000Z',
+        }
+      : undefined,
 }
 
 describe('media routes', () => {
@@ -116,6 +131,75 @@ describe('media routes', () => {
 
     expect(response.statusCode).toBe(503)
     expect(response.json()).toEqual({ error: 'Хранилище медиа недоступно' })
+
+    await app.close()
+  })
+
+  it('marks uploaded media asset as ready', async () => {
+    const app = await buildServer({
+      env: loadEnv({
+        NODE_ENV: 'test',
+        WEB_ORIGIN: 'http://localhost:3000',
+      }),
+      mediaStorage: fakeStorage,
+      mediaRepository: fakeRepository,
+    })
+
+    const response = await app.inject({
+      method: 'POST',
+      url: '/api/v1/media/assets/asset-1/complete',
+    })
+
+    expect(response.statusCode).toBe(200)
+    expect(response.json()).toMatchObject({
+      asset: {
+        id: 'asset-1',
+        ownerType: 'event',
+        ownerId: 'event-1',
+        status: 'READY',
+      },
+    })
+
+    await app.close()
+  })
+
+  it('returns not found when completed media asset does not exist', async () => {
+    const app = await buildServer({
+      env: loadEnv({
+        NODE_ENV: 'test',
+        WEB_ORIGIN: 'http://localhost:3000',
+      }),
+      mediaStorage: fakeStorage,
+      mediaRepository: fakeRepository,
+    })
+
+    const response = await app.inject({
+      method: 'POST',
+      url: '/api/v1/media/assets/missing/complete',
+    })
+
+    expect(response.statusCode).toBe(404)
+    expect(response.json()).toEqual({ error: 'Медиа не найдено' })
+
+    await app.close()
+  })
+
+  it('returns service unavailable when media metadata repository is not configured', async () => {
+    const app = await buildServer({
+      env: loadEnv({
+        NODE_ENV: 'test',
+        WEB_ORIGIN: 'http://localhost:3000',
+      }),
+      mediaStorage: fakeStorage,
+    })
+
+    const response = await app.inject({
+      method: 'POST',
+      url: '/api/v1/media/assets/asset-1/complete',
+    })
+
+    expect(response.statusCode).toBe(503)
+    expect(response.json()).toEqual({ error: 'Медиа-метаданные недоступны' })
 
     await app.close()
   })

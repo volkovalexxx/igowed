@@ -84,5 +84,38 @@ export function createMediaRepository(env: ApiEnv): MediaRepository | undefined 
         await client.end().catch(() => undefined)
       }
     },
+
+    async updateAssetStatus(id: string, status: MediaAssetRecord['status']) {
+      const client = new pg.Client({ connectionString: env.DATABASE_URL })
+
+      try {
+        await client.connect()
+        const result = await client.query<Record<string, unknown>>(
+          `
+            update "MediaAsset"
+            set
+              status = $2,
+              "updatedAt" = now()
+            where id = $1
+            returning
+              id,
+              "ownerType",
+              "ownerId",
+              "objectKey",
+              "publicUrl",
+              "fileName",
+              "contentType",
+              "sizeBytes",
+              status,
+              "createdAt"
+          `,
+          [id, status],
+        )
+        const row = result.rows[0]
+        return row ? mapAsset(row) : undefined
+      } finally {
+        await client.end().catch(() => undefined)
+      }
+    },
   }
 }
