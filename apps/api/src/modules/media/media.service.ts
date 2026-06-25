@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto'
 import { extname } from 'node:path'
 import { MAX_UPLOAD_SIZE_BYTES, parseUploadRequest } from './media.validation.js'
-import type { CreateUploadInput, CreateUploadRequest, MediaStorage, PresignedUpload } from './media.types.js'
+import type { CreateUploadInput, CreateUploadRequest, MediaRepository, MediaStorage, PresignedUpload } from './media.types.js'
 
 export const UPLOAD_URL_TTL_SECONDS = 10 * 60
 
@@ -38,18 +38,32 @@ export function createMediaObjectKey(input: CreateUploadInput) {
   return `${ownerType}/${ownerId}/original/${requestId}.${extension}`
 }
 
-export async function createPresignedUpload(raw: unknown, storage: MediaStorage): Promise<PresignedUpload> {
+export async function createPresignedUpload(
+  raw: unknown,
+  storage: MediaStorage,
+  repository?: MediaRepository,
+): Promise<PresignedUpload> {
   const input = parseUploadRequest(raw)
   const objectKey = createMediaObjectKey({
     ...input,
     requestId: randomUUID(),
   })
   const uploadUrl = await storage.createUploadUrl(objectKey, UPLOAD_URL_TTL_SECONDS)
+  const publicUrl = storage.getPublicUrl(objectKey)
+  const asset = repository
+    ? await repository.createAsset({
+        ...input,
+        objectKey,
+        publicUrl,
+        status: 'PENDING',
+      })
+    : undefined
 
   return {
     uploadUrl,
-    publicUrl: storage.getPublicUrl(objectKey),
+    publicUrl,
     objectKey,
+    asset,
     method: 'PUT',
     headers: {
       'Content-Type': input.contentType,

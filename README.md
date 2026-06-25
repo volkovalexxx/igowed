@@ -57,7 +57,8 @@ curl -X POST http://localhost:4000/api/v1/media/uploads \
   -d "{\"ownerType\":\"event\",\"ownerId\":\"event-1\",\"fileName\":\"cover.webp\",\"contentType\":\"image/webp\",\"sizeBytes\":2048}"
 ```
 
-The response contains a `PUT` `uploadUrl`, public URL, object key, required headers, TTL, and max file size.
+The response contains a `PUT` `uploadUrl`, public URL, object key, required headers, TTL, max file size, and a pending
+media asset record for later gallery/reference workflows.
 
 Stop the stack:
 

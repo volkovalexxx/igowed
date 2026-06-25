@@ -1,21 +1,37 @@
 import { describe, expect, it } from 'vitest'
 import { loadEnv } from '../src/config/env.js'
+import type { MediaRepository, MediaStorage } from '../src/modules/media/media.types.js'
 import { buildServer } from '../src/server.js'
-import type { MediaStorage } from '../src/modules/media/media.types.js'
 
 const fakeStorage: MediaStorage = {
   getPublicUrl: (objectKey) => `http://localhost:9000/igowed-media/${objectKey}`,
   createUploadUrl: async (objectKey) => `http://minio:9000/igowed-media/${objectKey}?signature=test`,
 }
 
+const fakeRepository: MediaRepository = {
+  createAsset: async (input) => ({
+    id: 'asset-1',
+    ownerType: input.ownerType,
+    ownerId: input.ownerId,
+    objectKey: input.objectKey,
+    publicUrl: input.publicUrl,
+    fileName: input.fileName,
+    contentType: input.contentType,
+    sizeBytes: input.sizeBytes,
+    status: input.status,
+    createdAt: '2026-06-25T00:00:00.000Z',
+  }),
+}
+
 describe('media routes', () => {
-  it('creates a presigned upload contract', async () => {
+  it('creates a presigned upload contract and pending media asset metadata', async () => {
     const app = await buildServer({
       env: loadEnv({
         NODE_ENV: 'test',
         WEB_ORIGIN: 'http://localhost:3000',
       }),
       mediaStorage: fakeStorage,
+      mediaRepository: fakeRepository,
     })
 
     const response = await app.inject({
@@ -38,6 +54,12 @@ describe('media routes', () => {
       publicUrl: expect.stringContaining('http://localhost:9000/igowed-media/event/event-1/original/'),
       expiresInSeconds: 600,
       maxSizeBytes: 15 * 1024 * 1024,
+      asset: {
+        id: 'asset-1',
+        ownerType: 'event',
+        ownerId: 'event-1',
+        status: 'PENDING',
+      },
     })
     expect(body.upload.uploadUrl).toContain('http://minio:9000/igowed-media/event/event-1/original/')
 
@@ -51,6 +73,7 @@ describe('media routes', () => {
         WEB_ORIGIN: 'http://localhost:3000',
       }),
       mediaStorage: fakeStorage,
+      mediaRepository: fakeRepository,
     })
 
     const response = await app.inject({
