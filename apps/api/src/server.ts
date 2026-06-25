@@ -6,11 +6,12 @@ import { registerCatalogRoutes } from './modules/catalog/catalog.routes.js'
 import { registerHealthRoutes } from './modules/health/health.routes.js'
 import { registerHomeRoutes } from './modules/home/home.routes.js'
 import { registerMediaRoutes } from './modules/media/media.routes.js'
-import type { MediaStorage } from './modules/media/media.types.js'
+import type { MediaRepository, MediaStorage } from './modules/media/media.types.js'
 
 export type BuildServerOptions = {
   env?: ApiEnv
   mediaStorage?: MediaStorage
+  mediaRepository?: MediaRepository
 }
 
 export async function buildServer(options: BuildServerOptions = {}): Promise<FastifyInstance> {
@@ -33,7 +34,7 @@ export async function buildServer(options: BuildServerOptions = {}): Promise<Fas
   await registerHealthRoutes(app, appEnv)
   await registerCatalogRoutes(app)
   await registerHomeRoutes(app)
-  await registerMediaRoutes(app, appEnv, options.mediaStorage)
+  await registerMediaRoutes(app, appEnv, options.mediaStorage, options.mediaRepository)
 
   return app
 }

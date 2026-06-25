@@ -17,10 +17,34 @@ export type MediaStorage = {
   createUploadUrl(objectKey: string, expiresInSeconds: number): Promise<string>
 }
 
+export type MediaAssetRecord = {
+  id: string
+  ownerType: MediaOwnerType
+  ownerId: string
+  objectKey: string
+  publicUrl: string
+  fileName: string
+  contentType: string
+  sizeBytes: number
+  status: 'PENDING' | 'READY' | 'FAILED'
+  createdAt: string
+}
+
+export type CreateMediaAssetInput = CreateUploadRequest & {
+  objectKey: string
+  publicUrl: string
+  status: MediaAssetRecord['status']
+}
+
+export type MediaRepository = {
+  createAsset(input: CreateMediaAssetInput): Promise<MediaAssetRecord>
+}
+
 export type PresignedUpload = {
   uploadUrl: string
   publicUrl: string
   objectKey: string
+  asset?: MediaAssetRecord
   method: 'PUT'
   headers: {
     'Content-Type': string
