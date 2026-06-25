@@ -394,7 +394,8 @@
   gap: 16px;
 }
 
-.quickActions button {
+.quickActions button,
+.quickActions a {
   height: 126px;
   border-radius: 5px;
   background: #f4f4f4;

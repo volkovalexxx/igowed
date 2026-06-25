@@ -351,7 +351,11 @@ export function EventDetailsPage({ event }: { event: EventRecord }) {
                 <span>дней до свадьбы</span>
               </div>
               <div className={styles.quickActions}>
-                {['Список задач', 'Документы', 'Референсы', 'Заметки'].map((item) => (
+                <Link href={`/event/${event.id}/tasks`}>
+                  <span>▣</span>
+                  Список задач
+                </Link>
+                {['Документы', 'Референсы', 'Заметки'].map((item) => (
                   <button type="button" key={item}>
                     <span>▣</span>
                     {item}
