@@ -5,7 +5,7 @@
 }
 
 .topbar {
-  height: 72px;
+  height: 61px;
   border-bottom: 1px solid var(--border);
   background: #fff;
 }
@@ -58,6 +58,7 @@
   font-size: 13px;
   font-weight: 700;
   line-height: 1;
+  white-space: nowrap;
 }
 
 .goldButton {
@@ -94,6 +95,7 @@
   justify-content: center;
   color: #1e1e1e;
   position: relative;
+  font-size: 22px;
 }
 
 .badge {
@@ -128,6 +130,21 @@
   font-weight: 800;
 }
 
+.menuButton {
+  display: none;
+  width: 28px;
+  height: 24px;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2px 0;
+}
+
+.menuButton span {
+  height: 2px;
+  border-radius: 999px;
+  background: #1f1f1f;
+}
+
 .workspaceNav {
   height: 46px;
   border-bottom: 1px solid var(--border);
@@ -154,17 +171,25 @@
 }
 
 .content {
-  max-width: 990px;
+  max-width: 900px;
   margin: 0 auto;
-  padding: 48px 0 88px;
+  padding: 42px 0 100px;
   display: grid;
-  grid-template-columns: 260px minmax(0, 1fr);
-  gap: 126px;
+  grid-template-columns: 210px minmax(0, 650px);
+  gap: 134px;
+}
+
+.mobileTitleRow {
+  display: none;
+}
+
+.mediaColumn {
+  padding-top: 1px;
 }
 
 .uploadBox {
-  width: 260px;
-  height: 260px;
+  width: 210px;
+  height: 250px;
   border-radius: 7px;
   background: #f3f3f3;
   display: flex;
@@ -193,13 +218,19 @@
 }
 
 .uploadButton {
-  width: 185px;
-  margin: 16px auto 0;
+  width: 146px;
+  margin: 14px auto 0;
   cursor: pointer;
 }
 
+.buttonIcon {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+}
+
 .uploadStatus {
-  width: 220px;
+  width: 190px;
   margin: 10px auto 0;
   color: #777;
   font-size: 12px;
@@ -212,26 +243,18 @@
   max-width: 650px;
 }
 
-.formNotice,
 .formError {
   margin: -8px 0 22px;
-  font-size: 13px;
-  line-height: 1.45;
-}
-
-.formNotice {
-  color: #777;
-}
-
-.formError {
   border-radius: 12px;
   padding: 10px 14px;
   background: #fff1f1;
   color: #ad2222;
+  font-size: 13px;
+  line-height: 1.45;
 }
 
 .title {
-  margin: 0 0 20px;
+  margin: 0 0 24px;
   font-size: 31px;
   line-height: 1.15;
   font-weight: 700;
@@ -239,11 +262,15 @@
 }
 
 .section {
-  margin-top: 30px;
+  margin-top: 34px;
 }
 
 .section:first-of-type {
   margin-top: 0;
+}
+
+.subsection {
+  margin-top: 18px;
 }
 
 .sectionTitle {
@@ -267,10 +294,15 @@
 }
 
 .label {
+  margin: 0 0 8px;
   font-size: 12px;
   line-height: 1.2;
   font-weight: 600;
   color: #666;
+}
+
+.field .label {
+  margin: 0;
 }
 
 .inputWrap {
@@ -286,6 +318,7 @@
 .input,
 .select {
   width: 100%;
+  min-width: 0;
   border: 0;
   outline: 0;
   background: transparent;
@@ -300,6 +333,11 @@
 
 .select {
   appearance: none;
+}
+
+.selectArrow {
+  color: #555;
+  font-size: 16px;
 }
 
 .fieldIcon {
@@ -320,7 +358,7 @@
   height: 36px;
   border: 1.4px solid #5a4755;
   border-radius: 999px;
-  padding: 0 13px 0 20px;
+  padding: 0 5px 0 20px;
   display: inline-flex;
   align-items: center;
   justify-content: space-between;
@@ -347,8 +385,12 @@
   display: grid;
   grid-template-columns: 235px minmax(0, 1fr);
   gap: 96px;
-  align-items: center;
+  align-items: end;
   margin-top: 18px;
+}
+
+.optionRow:first-of-type {
+  margin-top: 0;
 }
 
 .segmented {
@@ -358,7 +400,6 @@
 }
 
 .segment,
-.chip,
 .chipButton {
   min-height: 32px;
   border-radius: 999px;
@@ -393,7 +434,7 @@
 
 .textarea {
   width: 100%;
-  min-height: 84px;
+  min-height: 70px;
   border: 1.4px solid #8d8d8d;
   border-radius: 14px;
   padding: 13px 17px;
@@ -401,6 +442,7 @@
   outline: 0;
   font: inherit;
   font-size: 14px;
+  line-height: 1.35;
 }
 
 .referenceActions {
@@ -475,13 +517,15 @@
 }
 
 .copyright {
-  height: 63px;
+  min-height: 63px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 16px;
   color: rgba(255, 255, 255, 0.38);
   font-size: 12px;
+  text-align: center;
 }
 
 @media (max-width: 1100px) {
@@ -508,7 +552,7 @@
 
   .content {
     padding: 40px 24px 80px;
-    gap: 48px;
+    gap: 56px;
   }
 
   .footerInner {
@@ -519,7 +563,7 @@
 
 @media (max-width: 760px) {
   .topbar {
-    height: 52px;
+    height: 45px;
   }
 
   .topbarInner {
@@ -528,45 +572,77 @@
   }
 
   .logo {
-    font-size: 19px;
+    font-size: 18px;
   }
 
   .mainNav,
   .desktopOnly,
   .currency,
-  .avatar span:last-child,
-  .mailButton {
+  .avatar,
+  .mailButton,
+  .workspaceNav {
     display: none;
   }
 
   .topActions {
-    gap: 6px;
+    gap: 13px;
   }
 
-  .workspaceNav {
-    height: 44px;
-    border-radius: 0;
+  .iconButton {
+    width: 25px;
+    height: 25px;
+    font-size: 23px;
   }
 
-  .workspaceInner {
-    padding: 0 16px;
-    gap: 24px;
-    font-size: 12px;
+  .menuButton {
+    display: flex;
   }
 
   .content {
     display: block;
-    padding: 24px 16px 64px;
+    padding: 17px 15px 40px;
   }
 
-  .uploadBox {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 1 / 0.62;
+  .mobileTitleRow {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 19px;
+  }
+
+  .mobileTitleRow a {
+    color: #b9b9b9;
+    font-size: 30px;
+    line-height: 1;
+  }
+
+  .mobileTitleRow h1 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 800;
   }
 
   .mediaColumn {
-    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    margin-bottom: 19px;
+    padding-top: 0;
+  }
+
+  .uploadBox {
+    width: 86px;
+    height: 92px;
+    flex: 0 0 86px;
+  }
+
+  .uploadButton {
+    width: 147px;
+    margin: 0;
+  }
+
+  .uploadStatus {
+    display: none;
   }
 
   .form {
@@ -574,49 +650,123 @@
   }
 
   .title {
-    font-size: 26px;
+    display: none;
   }
 
   .section {
     margin-top: 28px;
   }
 
-  .gridTwo,
-  .participants,
+  .sectionTitle {
+    margin-bottom: 14px;
+    font-size: 16px;
+  }
+
+  .gridTwo {
+    grid-template-columns: 1fr 1fr;
+    column-gap: 8px;
+    row-gap: 11px;
+  }
+
+  .participants {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 8px;
+  }
+
+  .participants .addParticipant {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: 196px;
+  }
+
   .optionRow {
-    grid-template-columns: 1fr;
-    gap: 12px;
+    display: block;
+    margin-top: 18px;
   }
 
   .rangeGrid {
     grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 11px;
   }
 
-  .chip,
-  .chipButton,
-  .segment {
-    min-height: 30px;
-    padding: 0 14px;
+  .inputWrap {
+    height: 31px;
+    padding: 0 10px;
+  }
+
+  .input,
+  .select {
     font-size: 12px;
   }
 
-  .formActions,
+  .label {
+    font-size: 12px;
+  }
+
+  .chipButton,
+  .segment {
+    min-height: 25px;
+    padding: 0 15px;
+    font-size: 12px;
+  }
+
+  .chips {
+    gap: 9px;
+  }
+
+  .textarea {
+    min-height: 84px;
+    font-size: 12px;
+  }
+
   .referenceActions {
-    align-items: stretch;
-    flex-direction: column;
+    gap: 9px;
+  }
+
+  .referenceActions .darkButton {
+    flex: 1;
+    padding: 0 12px;
   }
 
   .formActions {
-    margin-top: 40px;
+    margin-top: 37px;
+    gap: 9px;
+  }
+
+  .formActions .goldButton {
+    flex: 1;
+  }
+
+  .formActions .ghostButton {
+    width: 118px;
+  }
+
+  .footer {
+    min-height: 468px;
   }
 
   .footerInner {
     grid-template-columns: 1fr;
+    justify-items: center;
     gap: 28px;
-    padding: 48px 16px 36px;
+    padding: 45px 63px 31px;
+    text-align: center;
+  }
+
+  .footerLogo {
+    margin-bottom: 26px;
+    font-size: 26px;
+  }
+
+  .footerLinks {
+    gap: 11px;
+    font-weight: 700;
   }
 
   .footerPill {
-    width: 100%;
+    width: 214px;
+    height: 35px;
+    font-weight: 700;
   }
 }

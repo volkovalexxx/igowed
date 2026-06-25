@@ -9,6 +9,9 @@ type UploadResponse = {
     uploadUrl: string
     publicUrl: string
     objectKey: string
+    asset?: {
+      id: string
+    }
     method: 'PUT'
     headers: {
       'Content-Type': string
@@ -63,8 +66,19 @@ export async function uploadEventCover(file: File, fetcher: Fetcher = fetch) {
     throw new Error('Не удалось загрузить фото')
   }
 
+  if (result.upload.asset?.id) {
+    const completeResponse = await fetcher(`${getMediaApiBase()}/media/assets/${result.upload.asset.id}/complete`, {
+      method: 'POST',
+    })
+
+    if (!completeResponse.ok) {
+      throw new Error('Не удалось завершить загрузку фото')
+    }
+  }
+
   return {
     publicUrl: result.upload.publicUrl,
     objectKey: result.upload.objectKey,
+    assetId: result.upload.asset?.id,
   }
 }
