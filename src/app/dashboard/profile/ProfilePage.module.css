@@ -1,0 +1,174 @@
+.page {
+  width: min(100%, 820px);
+  margin: 0 auto;
+  padding: 28px;
+}
+
+.pageHeader {
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.section {
+  margin-bottom: 20px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #fff;
+  padding: 28px;
+}
+
+.sectionTop {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.sectionHeader {
+  margin: 0 0 20px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 12px;
+  color: var(--dark);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.sectionTop .sectionHeader {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.fieldLabel {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.grid2 {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 16px 20px;
+}
+
+.cardsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.avatarRow {
+  margin-bottom: 24px;
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.halfField {
+  max-width: 50%;
+}
+
+.radioRow {
+  margin-top: 4px;
+  display: flex;
+  gap: 24px;
+}
+
+.timeRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+@media (max-width: 1024px) {
+  .page {
+    width: 100%;
+    max-width: none;
+    padding: 14px 12px 28px;
+  }
+
+  .pageHeader {
+    margin-bottom: 14px;
+    align-items: flex-start;
+  }
+
+  .pageHeader h1 {
+    font-size: 20px !important;
+    line-height: 1.2;
+  }
+
+  .pageHeader p {
+    max-width: 250px;
+    font-size: 12px !important;
+    line-height: 1.35;
+  }
+
+  .pageHeader a {
+    max-width: 116px;
+    padding: 7px 10px !important;
+    font-size: 12px !important;
+    line-height: 1.2;
+    text-align: center;
+  }
+
+  .section {
+    margin-bottom: 14px;
+    border-radius: 10px;
+    padding: 16px 14px;
+  }
+
+  .sectionTop {
+    margin-bottom: 16px;
+    align-items: center;
+  }
+
+  .sectionHeader {
+    margin-bottom: 16px;
+    font-size: 17px;
+    line-height: 1.25;
+  }
+
+  .grid2,
+  .cardsGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .avatarRow {
+    align-items: center;
+    gap: 14px;
+  }
+
+  .halfField {
+    max-width: none;
+  }
+
+  .radioRow,
+  .timeRow {
+    flex-wrap: wrap;
+    gap: 10px 16px;
+  }
+}
+
+@media (max-width: 420px) {
+  .page {
+    padding-inline: 10px;
+  }
+
+  .pageHeader {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .section {
+    padding: 14px 12px;
+  }
+
+  .avatarRow {
+    align-items: flex-start;
+  }
+}
