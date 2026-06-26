@@ -106,7 +106,6 @@ apps/
     test/
 docs/
   ARCHITECTURE.md
-  RELEASE_PLAN.md
 prisma/
 src/
   app/
@@ -117,7 +116,7 @@ src/
 
 ## Development Direction
 
-The first release should be built vertically:
+Product development is organized vertically:
 
 1. API and database contracts.
 2. Seeded data for the homepage.
@@ -128,5 +127,4 @@ The first release should be built vertically:
 See:
 
 - [Architecture](docs/ARCHITECTURE.md)
-- [First Release Plan](docs/RELEASE_PLAN.md)
 - [Git Workflow](docs/GIT_WORKFLOW.md)
