@@ -1,0 +1,187 @@
+.page {
+  width: min(100%, 960px);
+  padding: 28px 32px;
+}
+
+.header {
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.addButton,
+.saveButton {
+  min-height: 40px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--dark);
+  color: #fff;
+  padding: 0 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.uploadZone {
+  margin-bottom: 28px;
+  border: 1px dashed #b7b7b7;
+  border-radius: 12px;
+  background: #fff;
+  padding: 34px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  cursor: pointer;
+  transition:
+    background 150ms ease,
+    border-color 150ms ease;
+}
+
+.uploadZone:hover {
+  border-color: var(--dark);
+  background: #f7f7f7;
+}
+
+.modeScroller {
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.modeScroller::-webkit-scrollbar {
+  display: none;
+}
+
+.modeTabs {
+  min-width: max-content;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.modeTab {
+  min-height: 40px;
+  margin-bottom: -1px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  padding: 0 16px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.modeTabActive {
+  border-bottom-color: var(--dark);
+}
+
+.photoGrid {
+  display: grid;
+  gap: 10px;
+}
+
+.photoGridVertical {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.photoGridHorizontal {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.photoGridSquare {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.saveRow {
+  margin-top: 28px;
+  display: flex;
+  justify-content: center;
+}
+
+.saveButton {
+  min-width: 190px;
+  background: var(--gold);
+}
+
+@media (max-width: 1024px) {
+  .page {
+    width: 100%;
+    padding: 16px 12px 28px;
+  }
+
+  .header {
+    margin-bottom: 16px;
+    align-items: flex-start;
+  }
+
+  .header h2 {
+    font-size: 20px !important;
+  }
+
+  .addButton {
+    min-height: 36px;
+    padding-inline: 13px;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  .uploadZone {
+    margin-bottom: 20px;
+    padding: 24px 14px;
+    text-align: center;
+  }
+
+  .modeScroller {
+    margin-inline: -12px;
+    padding-inline: 12px;
+  }
+
+  .modeTab {
+    min-height: 38px;
+    padding-inline: 12px;
+    font-size: 12px;
+  }
+
+  .photoGrid,
+  .photoGridVertical,
+  .photoGridHorizontal,
+  .photoGridSquare {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .saveRow {
+    margin-top: 20px;
+  }
+
+  .saveButton {
+    width: 100%;
+  }
+}
+
+@media (max-width: 420px) {
+  .page {
+    padding-inline: 10px;
+  }
+
+  .header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px;
+  }
+
+}
