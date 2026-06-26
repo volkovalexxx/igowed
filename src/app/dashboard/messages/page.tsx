@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Search, Camera, Chat } from '@/components/ui/Icons';
+import styles from './MessagesPage.module.css';
 
 /* ── Types ───────────────────────────────────────────────────────────── */
 
@@ -277,12 +278,11 @@ export default function MessagesPage() {
   }
 
   return (
-    <div style={{ display: 'flex', height: '100vh', maxHeight: '100vh', overflow: 'hidden' }}>
+    <div className={styles.messagesShell}>
       {/* ── Left panel: chat list ──────────────────────────────── */}
       <div
+        className={styles.conversationPanel}
         style={{
-          width: 320,
-          flexShrink: 0,
           borderRight: '1px solid var(--border)',
           display: 'flex',
           flexDirection: 'column',
@@ -290,7 +290,7 @@ export default function MessagesPage() {
         }}
       >
         {/* Panel header */}
-        <div style={{ padding: '20px 16px 12px', borderBottom: '1px solid var(--border)' }}>
+        <div className={styles.panelHeader} style={{ borderBottom: '1px solid var(--border)' }}>
           <h3 style={{ fontSize: 16, fontWeight: 700, color: 'var(--dark)', marginBottom: 12 }}>
             Сообщения
           </h3>
@@ -326,7 +326,7 @@ export default function MessagesPage() {
         </div>
 
         {/* Conversations list */}
-        <div style={{ flex: 1, overflowY: 'auto' }}>
+        <div className={styles.conversationList}>
           {filteredConvs.length === 0 ? (
             <div className="flex flex-col items-center py-10 gap-2">
               <Chat size={28} style={{ color: 'var(--muted)' }} />
@@ -346,11 +346,11 @@ export default function MessagesPage() {
       </div>
 
       {/* ── Right panel: active chat ───────────────────────────── */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, background: 'var(--paper)' }}>
+      <div className={styles.chatPanel}>
         {/* Chat header */}
         <div
+          className={styles.chatHeader}
           style={{
-            padding: '14px 20px',
             background: '#fff',
             borderBottom: '1px solid var(--border)',
             display: 'flex',
@@ -389,10 +389,10 @@ export default function MessagesPage() {
 
         {/* Messages area */}
         <div
+          className={styles.messagesArea}
           style={{
             flex: 1,
             overflowY: 'auto',
-            padding: '16px 20px',
             display: 'flex',
             flexDirection: 'column',
           }}
@@ -405,10 +405,10 @@ export default function MessagesPage() {
 
         {/* Input area */}
         <div
+          className={styles.inputBar}
           style={{
             background: '#fff',
             borderTop: '1px solid var(--border)',
-            padding: '12px 16px',
             display: 'flex',
             alignItems: 'flex-end',
             gap: 10,
