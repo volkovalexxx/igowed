@@ -55,7 +55,7 @@ function Header({ eventId }: { eventId: string }) {
         <Link className={styles.activeTab} href={`/event/${eventId}/tasks`}>
           Список задач
         </Link>
-        <Link href="#">Список гостей</Link>
+        <Link href={`/event/${eventId}/guests`}>Список гостей</Link>
         <Link href="#">Рассадка</Link>
         <Link href="#">Тайминг</Link>
         <Link href="#">Бюджет</Link>
