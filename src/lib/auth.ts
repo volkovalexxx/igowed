@@ -2,8 +2,34 @@ import NextAuth from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
 import bcrypt from 'bcryptjs'
 import prisma from './prisma'
+import { isSessionRefreshDue, sessionMaxAgeSeconds, sessionUpdateAgeSeconds } from '@/features/auth/sessionPolicy'
+
+async function refreshTokenUser(token: { id?: unknown; refreshedAt?: unknown }) {
+  if (typeof token.id !== 'string' || !isSessionRefreshDue(token.refreshedAt)) return null
+
+  return prisma.user.findUnique({
+    where: {
+      id: token.id,
+    },
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      image: true,
+      role: true,
+    },
+  })
+}
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  session: {
+    strategy: 'jwt',
+    maxAge: sessionMaxAgeSeconds,
+    updateAge: sessionUpdateAgeSeconds,
+  },
+  jwt: {
+    maxAge: sessionMaxAgeSeconds,
+  },
   providers: [
     Credentials({
       credentials: {
@@ -32,11 +58,24 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
-    jwt({ token, user }) {
+    async jwt({ token, user }) {
       if (user) {
         token.id = user.id
         token.role = (user as { id: string; role?: string }).role
+        token.refreshedAt = Date.now()
+        return token
       }
+
+      const refreshedUser = await refreshTokenUser(token)
+      if (refreshedUser) {
+        token.id = refreshedUser.id
+        token.email = refreshedUser.email
+        token.name = refreshedUser.name
+        token.picture = refreshedUser.image
+        token.role = refreshedUser.role
+        token.refreshedAt = Date.now()
+      }
+
       return token
     },
     session({ session, token }) {
