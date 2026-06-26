@@ -6,12 +6,14 @@ export type EventTask = {
   id: string
   title: string
   priority: TaskPriority
-  deadline: string
+  deadline: string | null
   status: TaskStatus
+  order: number
 }
 
 export type TaskGroup = {
   id: string
   title: string
+  order: number
   tasks: EventTask[]
 }

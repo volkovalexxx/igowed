@@ -3,8 +3,8 @@ import { filterTasksByStatus, getPriorityLabel, getTaskStatusLabel } from './eve
 import type { EventTask } from './eventTasks.types'
 
 const tasks: EventTask[] = [
-  { id: 'one', title: 'One', priority: 'high', deadline: '29.02.2026', status: 'open' },
-  { id: 'two', title: 'Two', priority: 'low', deadline: '29.02.2026', status: 'done' },
+  { id: 'one', title: 'One', priority: 'high', deadline: '28.02.2026', status: 'open', order: 0 },
+  { id: 'two', title: 'Two', priority: 'low', deadline: '28.02.2026', status: 'done', order: 1 },
 ]
 
 describe('event task helpers', () => {
