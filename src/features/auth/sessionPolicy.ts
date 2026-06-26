@@ -1,7 +1,21 @@
-export const sessionMaxAgeSeconds = 60 * 60 * 24 * 30
-export const sessionUpdateAgeSeconds = 60 * 60 * 6
+export const accessTokenMaxAgeSeconds = 60 * 15
+export const refreshTokenMaxAgeSeconds = 60 * 60 * 24
 
-export function isSessionRefreshDue(refreshedAt: unknown, now = Date.now()) {
-  if (typeof refreshedAt !== 'number') return true
-  return now - refreshedAt >= sessionUpdateAgeSeconds * 1000
+export function createTokenWindow(now = Date.now()) {
+  return {
+    accessTokenExpiresAt: now + accessTokenMaxAgeSeconds * 1000,
+    refreshTokenExpiresAt: now + refreshTokenMaxAgeSeconds * 1000,
+  }
+}
+
+export function isAccessTokenExpired(accessTokenExpiresAt: unknown, now = Date.now()) {
+  return typeof accessTokenExpiresAt !== 'number' || now >= accessTokenExpiresAt
+}
+
+export function isRefreshTokenExpired(refreshTokenExpiresAt: unknown, now = Date.now()) {
+  return typeof refreshTokenExpiresAt !== 'number' || now >= refreshTokenExpiresAt
+}
+
+export function shouldRefreshAccessToken(accessTokenExpiresAt: unknown, refreshTokenExpiresAt: unknown, now = Date.now()) {
+  return isAccessTokenExpired(accessTokenExpiresAt, now) && !isRefreshTokenExpired(refreshTokenExpiresAt, now)
 }

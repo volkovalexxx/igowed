@@ -2,10 +2,11 @@ import NextAuth from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
 import bcrypt from 'bcryptjs'
 import prisma from './prisma'
-import { isSessionRefreshDue, sessionMaxAgeSeconds, sessionUpdateAgeSeconds } from '@/features/auth/sessionPolicy'
+import { createTokenWindow, isRefreshTokenExpired, refreshTokenMaxAgeSeconds, shouldRefreshAccessToken } from '@/features/auth/sessionPolicy'
 
-async function refreshTokenUser(token: { id?: unknown; refreshedAt?: unknown }) {
-  if (typeof token.id !== 'string' || !isSessionRefreshDue(token.refreshedAt)) return null
+async function refreshTokenUser(token: { id?: unknown; accessTokenExpiresAt?: unknown; refreshTokenExpiresAt?: unknown }) {
+  if (typeof token.id !== 'string') return null
+  if (!shouldRefreshAccessToken(token.accessTokenExpiresAt, token.refreshTokenExpiresAt)) return null
 
   return prisma.user.findUnique({
     where: {
@@ -24,11 +25,11 @@ async function refreshTokenUser(token: { id?: unknown; refreshedAt?: unknown }) 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   session: {
     strategy: 'jwt',
-    maxAge: sessionMaxAgeSeconds,
-    updateAge: sessionUpdateAgeSeconds,
+    maxAge: refreshTokenMaxAgeSeconds,
+    updateAge: 0,
   },
   jwt: {
-    maxAge: sessionMaxAgeSeconds,
+    maxAge: refreshTokenMaxAgeSeconds,
   },
   providers: [
     Credentials({
@@ -62,7 +63,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (user) {
         token.id = user.id
         token.role = (user as { id: string; role?: string }).role
-        token.refreshedAt = Date.now()
+        token.authExpired = false
+        Object.assign(token, createTokenWindow())
+        return token
+      }
+
+      if (isRefreshTokenExpired(token.refreshTokenExpiresAt)) {
+        token.authExpired = true
+        delete token.id
+        delete token.role
         return token
       }
 
@@ -73,15 +82,18 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.name = refreshedUser.name
         token.picture = refreshedUser.image
         token.role = refreshedUser.role
-        token.refreshedAt = Date.now()
+        token.authExpired = false
+        token.accessTokenExpiresAt = createTokenWindow().accessTokenExpiresAt
       }
 
       return token
     },
     session({ session, token }) {
-      if (token) {
-        session.user.id = token.id as string
-        session.user.role = token.role as string
+      if (token && typeof token.id === 'string' && typeof token.role === 'string' && !token.authExpired) {
+        session.user.id = token.id
+        session.user.role = token.role
+        session.accessTokenExpiresAt = token.accessTokenExpiresAt
+        session.refreshTokenExpiresAt = token.refreshTokenExpiresAt
       }
       return session
     },
