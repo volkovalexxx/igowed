@@ -2,6 +2,7 @@
 
 import React, { useState, useRef } from 'react';
 import { Camera, Check, Close, ChevDown } from '@/components/ui/Icons';
+import styles from './ProfilePage.module.css';
 
 /* ── Types ──────────────────────────────────────────────────────────────── */
 
@@ -84,43 +85,19 @@ function blurStyle(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement | 
 /* ── Section header ─────────────────────────────────────────────────────── */
 
 function SectionHeader({ children }: { children: React.ReactNode }) {
-  return (
-    <h2 style={{
-      fontSize: 18, fontWeight: 600, color: 'var(--dark)',
-      marginBottom: 20, paddingBottom: 12,
-      borderBottom: '1px solid var(--border)',
-      margin: '0 0 20px',
-    }}>
-      {children}
-    </h2>
-  );
+  return <h2 className={styles.sectionHeader}>{children}</h2>;
 }
 
 /* ── Field label ────────────────────────────────────────────────────────── */
 
 function Label({ children }: { children: React.ReactNode }) {
-  return (
-    <label style={{
-      display: 'block', fontSize: 12, fontWeight: 500,
-      color: 'var(--muted)', marginBottom: 6,
-    }}>
-      {children}
-    </label>
-  );
+  return <label className={styles.fieldLabel}>{children}</label>;
 }
 
 /* ── Grid 2col ──────────────────────────────────────────────────────────── */
 
 function Grid2({ children }: { children: React.ReactNode }) {
-  return (
-    <div style={{
-      display: 'grid',
-      gridTemplateColumns: '1fr 1fr',
-      gap: '16px 20px',
-    }}>
-      {children}
-    </div>
-  );
+  return <div className={styles.grid2}>{children}</div>;
 }
 
 /* ── Multi-select tags ──────────────────────────────────────────────────── */
@@ -381,18 +358,10 @@ export default function DashboardProfilePage() {
       : [...form.specializations, s]);
   };
 
-  const sectionStyle: React.CSSProperties = {
-    background: '#fff',
-    borderRadius: 12,
-    padding: 28,
-    marginBottom: 20,
-    border: '1px solid var(--border)',
-  };
-
   return (
-    <div style={{ padding: 28, maxWidth: 820, margin: '0 auto' }}>
+    <div className={styles.page}>
       {/* Page header */}
-      <div style={{ marginBottom: 24, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div className={styles.pageHeader}>
         <div>
           <h1 style={{ fontSize: 22, fontWeight: 700, color: 'var(--dark)', margin: 0 }}>Профиль подрядчика</h1>
           <p style={{ margin: '4px 0 0', color: 'var(--muted)', fontSize: 13 }}>Управляйте публичным профилем и настройками</p>
@@ -407,8 +376,8 @@ export default function DashboardProfilePage() {
       </div>
 
       {/* ── Section 1: General ── */}
-      <div style={sectionStyle}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
+      <div className={styles.section}>
+        <div className={styles.sectionTop}>
           <SectionHeader>Общая информация</SectionHeader>
           <button className="btn btn-gold btn-sm" style={{ flexShrink: 0, marginTop: -4 }}>
             → PRO
@@ -416,7 +385,7 @@ export default function DashboardProfilePage() {
         </div>
 
         {/* Avatar */}
-        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 20, marginBottom: 24 }}>
+        <div className={styles.avatarRow}>
           <div style={{ position: 'relative', flexShrink: 0 }}>
             <div style={{
               width: 80, height: 80, borderRadius: '50%',
@@ -630,7 +599,7 @@ export default function DashboardProfilePage() {
           </Grid2>
 
           {/* Phone 2 */}
-          <div style={{ maxWidth: '50%' }}>
+          <div className={styles.halfField}>
             <Label>Телефон 2</Label>
             <input
               style={inputStyle}
@@ -712,9 +681,9 @@ export default function DashboardProfilePage() {
       </div>
 
       {/* ── Section 2: Gallery display mode ── */}
-      <div style={sectionStyle}>
+      <div className={styles.section}>
         <SectionHeader>Отображение фото в галерее профиля</SectionHeader>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12 }}>
+        <div className={styles.cardsGrid}>
           {[
             { mode: 'VERTICAL' as DisplayMode, label: 'Вертикальные' },
             { mode: 'HORIZONTAL' as DisplayMode, label: 'Горизонтальные' },
@@ -733,9 +702,9 @@ export default function DashboardProfilePage() {
       </div>
 
       {/* ── Section 3: Card display mode ── */}
-      <div style={sectionStyle}>
+      <div className={styles.section}>
         <SectionHeader>Отображение карточек на странице профиля</SectionHeader>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12 }}>
+        <div className={styles.cardsGrid}>
           {[
             { mode: 'VERTICAL' as CardMode, label: 'Вертикальные' },
             { mode: 'HORIZONTAL' as CardMode, label: 'Горизонтальные' },
@@ -754,7 +723,7 @@ export default function DashboardProfilePage() {
       </div>
 
       {/* ── Section 4: Contacts ── */}
-      <div style={sectionStyle}>
+      <div className={styles.section}>
         <SectionHeader>Контакты</SectionHeader>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           {/* Address */}
@@ -799,7 +768,7 @@ export default function DashboardProfilePage() {
           {/* Activity type */}
           <div>
             <Label>Вид деятельности</Label>
-            <div style={{ display: 'flex', gap: 24, marginTop: 4 }}>
+            <div className={styles.radioRow}>
               {[
                 { value: 'IP', label: 'ИП' },
                 { value: 'OOO', label: 'ООО' },
@@ -828,7 +797,7 @@ export default function DashboardProfilePage() {
           {/* Working hours */}
           <div>
             <Label>Время работы</Label>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <div className={styles.timeRow}>
               <input
                 type="time"
                 style={{ ...inputStyle, width: 130 }}
