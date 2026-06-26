@@ -6,6 +6,8 @@ declare module 'next-auth' {
       id: string
       role: string
     } & DefaultSession['user']
+    accessTokenExpiresAt?: number
+    refreshTokenExpiresAt?: number
   }
 }
 
@@ -13,6 +15,8 @@ declare module 'next-auth/jwt' {
   interface JWT {
     id?: string
     role?: string
-    refreshedAt?: number
+    accessTokenExpiresAt?: number
+    refreshTokenExpiresAt?: number
+    authExpired?: boolean
   }
 }

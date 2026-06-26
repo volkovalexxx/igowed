@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getToken } from 'next-auth/jwt'
 import { getPostAuthRedirect } from './features/auth/authRedirect'
+import { isRefreshTokenExpired } from './features/auth/sessionPolicy'
 
 function getSignedInRedirect(role: unknown, req: NextRequest) {
   const target = getPostAuthRedirect(role, req.nextUrl.searchParams.get('next'))
@@ -10,7 +11,7 @@ function getSignedInRedirect(role: unknown, req: NextRequest) {
 export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET })
-  const isLoggedIn = Boolean(token)
+  const isLoggedIn = Boolean(token && !token.authExpired && !isRefreshTokenExpired(token.refreshTokenExpiresAt))
 
   const isProtected = pathname.startsWith('/dashboard') || pathname.startsWith('/event')
   const isAuthEntry = pathname === '/login' || pathname === '/register' || pathname === '/register/email'
