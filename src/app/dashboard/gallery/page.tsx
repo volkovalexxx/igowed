@@ -2,6 +2,7 @@
 
 import React, { useState, useRef } from 'react';
 import { Camera, Plus, Close } from '@/components/ui/Icons';
+import styles from './GalleryPage.module.css';
 
 /* ── Types ───────────────────────────────────────────────────────────── */
 
@@ -168,7 +169,6 @@ export default function GalleryPage() {
     { key: 'square',     label: 'Квадратные' },
   ];
 
-  const COLS: Record<DisplayMode, number> = { vertical: 3, horizontal: 2, square: 4 };
   const ASPECT: Record<DisplayMode, string> = { vertical: '3/4', horizontal: '4/3', square: '1/1' };
 
   function handleDelete(id: number) {
@@ -184,10 +184,6 @@ export default function GalleryPage() {
   function handleDragStart(id: number) {
     setDragSourceId(id);
     setPhotos((prev) => prev.map((p) => ({ ...p, isDragging: p.id === id })));
-  }
-
-  function handleDragOver(e: React.DragEvent) {
-    e.preventDefault();
   }
 
   function handleDrop(targetId: number) {
@@ -231,17 +227,21 @@ export default function GalleryPage() {
     setTimeout(() => setSaved(false), 2000);
   }
 
-  const cols = COLS[mode];
   const aspect = ASPECT[mode];
+  const gridModeClass = {
+    vertical: styles.photoGridVertical,
+    horizontal: styles.photoGridHorizontal,
+    square: styles.photoGridSquare,
+  }[mode];
 
   return (
-    <div style={{ padding: '28px 32px', maxWidth: 960 }}>
+    <div className={styles.page}>
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className={styles.header}>
         <h2 style={{ fontSize: 22, fontWeight: 700, color: 'var(--dark)' }}>Моя галерея</h2>
         <button
           type="button"
-          className="btn btn-gold"
+          className={styles.addButton}
           onClick={() => fileInputRef.current?.click()}
         >
           <Plus size={15} />
@@ -259,12 +259,7 @@ export default function GalleryPage() {
 
       {/* Upload zone */}
       <div
-        className="flex flex-col items-center justify-center gap-3 mb-8 rounded-xl cursor-pointer transition-colors"
-        style={{
-          border: '2px dashed var(--border)',
-          padding: '36px 24px',
-          background: '#fff',
-        }}
+        className={styles.uploadZone}
         onClick={() => fileInputRef.current?.click()}
         onDragOver={(e) => e.preventDefault()}
         onDrop={(e) => {
@@ -281,14 +276,6 @@ export default function GalleryPage() {
             reader.readAsDataURL(file);
           });
         }}
-        onMouseEnter={(e) => {
-          (e.currentTarget as HTMLDivElement).style.borderColor = 'var(--gold)';
-          (e.currentTarget as HTMLDivElement).style.background = 'var(--gold-soft)';
-        }}
-        onMouseLeave={(e) => {
-          (e.currentTarget as HTMLDivElement).style.borderColor = 'var(--border)';
-          (e.currentTarget as HTMLDivElement).style.background = '#fff';
-        }}
       >
         <span style={{ color: 'var(--gold)' }}>
           <Camera size={32} />
@@ -302,7 +289,8 @@ export default function GalleryPage() {
       </div>
 
       {/* Mode tabs */}
-      <div className="flex items-center gap-0 mb-6" style={{ borderBottom: '1px solid var(--border)' }}>
+      <div className={styles.modeScroller}>
+        <div className={styles.modeTabs}>
         {MODES.map(({ key, label }) => {
           const isActive = mode === key;
           return (
@@ -310,19 +298,16 @@ export default function GalleryPage() {
               key={key}
               type="button"
               onClick={() => setMode(key)}
-              className="px-4 py-2.5 font-medium transition-colors"
+              className={`${styles.modeTab} ${isActive ? styles.modeTabActive : ''}`}
               style={{
-                fontSize: 13,
-                color: isActive ? 'var(--gold)' : 'var(--muted)',
-                borderBottom: isActive ? '2px solid var(--gold)' : '2px solid transparent',
-                background: 'transparent',
-                marginBottom: -1,
+                color: isActive ? 'var(--dark)' : 'var(--muted)',
               }}
             >
               {label}
             </button>
           );
         })}
+        </div>
       </div>
 
       {/* Photo grid */}
@@ -332,10 +317,7 @@ export default function GalleryPage() {
           <p style={{ fontSize: 15, color: 'var(--muted)' }}>Галерея пуста. Загрузите ваши фото.</p>
         </div>
       ) : (
-        <div
-          className="grid gap-3"
-          style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}
-        >
+        <div className={`${styles.photoGrid} ${gridModeClass}`}>
           {photos.map((photo) => (
             <PhotoCard
               key={photo.id}
@@ -354,11 +336,10 @@ export default function GalleryPage() {
 
       {/* Save button */}
       {photos.length > 0 && (
-        <div className="flex justify-center mt-8">
+        <div className={styles.saveRow}>
           <button
             type="button"
-            className="btn btn-gold"
-            style={{ minWidth: 180, fontSize: 14 }}
+            className={styles.saveButton}
             onClick={handleSave}
           >
             {saved ? '✓ Порядок сохранён' : 'Сохранить порядок'}
