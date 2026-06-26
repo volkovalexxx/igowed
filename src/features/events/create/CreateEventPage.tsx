@@ -275,10 +275,10 @@ export function CreateEventPage() {
       <Header />
       <main className={styles.content}>
         <div className={styles.mobileTitleRow}>
-          <Link href="/event" aria-label="Назад">
+          <Link href="/event" aria-label="Назад к мероприятиям">
             ‹
           </Link>
-          <h1>Создать Мероприятие</h1>
+          <h1>Создать мероприятие</h1>
         </div>
 
         <aside className={styles.mediaColumn}>

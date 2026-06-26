@@ -143,6 +143,10 @@
   font-weight: 600;
 }
 
+.mobileContext {
+  display: none;
+}
+
 .headingRow {
   margin-bottom: 50px;
   display: flex;
@@ -395,9 +399,25 @@
   }
 
   .breadcrumbs {
-    margin-bottom: 27px;
+    margin-bottom: 18px;
     font-size: 12px;
     line-height: 1.7;
+  }
+
+  .mobileContext {
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    color: #202222;
+    font-size: 18px;
+    font-weight: 800;
+  }
+
+  .mobileContext a {
+    color: #b8b8b8;
+    font-size: 30px;
+    line-height: 1;
   }
 
   .headingRow {

@@ -265,6 +265,10 @@
   font-weight: 600;
 }
 
+.mobileContext {
+  display: none;
+}
+
 .eventGrid {
   display: grid;
   grid-template-columns: 340px minmax(0, 410px) minmax(440px, 1fr);
@@ -941,6 +945,22 @@
   .breadcrumbs {
     margin-bottom: 12px;
     font-size: 10px;
+  }
+
+  .mobileContext {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    color: #202222;
+    font-size: 16px;
+    font-weight: 800;
+  }
+
+  .mobileContext a {
+    color: #b8b8b8;
+    font-size: 30px;
+    line-height: 1;
   }
 
   .eventGrid {

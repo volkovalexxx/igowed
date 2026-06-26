@@ -189,6 +189,12 @@ export function EventGuestsPage({ eventId, initialGuests }: { eventId: string; i
     <div className={styles.page}>
       <Header eventId={eventId} />
       <main className={styles.content}>
+        <div className={styles.mobileContext}>
+          <Link href={`/event/${eventId}`} aria-label="Назад к мероприятию">
+            ‹
+          </Link>
+          <span>Список гостей</span>
+        </div>
         <div className={styles.breadcrumbs}>Главная › Моя свадьба › Список гостей</div>
         <section className={styles.headingRow}>
           <h1>Список гостей</h1>
