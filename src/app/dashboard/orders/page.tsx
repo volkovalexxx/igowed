@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { Cal, Chat, Check } from '@/components/ui/Icons';
+import styles from './OrdersPage.module.css';
 
 /* ── Types ───────────────────────────────────────────────────────────── */
 
@@ -114,16 +115,9 @@ function OrderCard({
   onComplete: (id: number) => void;
 }) {
   return (
-    <div
-      className="rounded-xl flex flex-col sm:flex-row gap-4"
-      style={{
-        background: '#fff',
-        border: '1px solid var(--border)',
-        padding: 20,
-      }}
-    >
+    <div className={styles.orderCard}>
       {/* Left: avatar + name */}
-      <div className="flex items-start gap-3 shrink-0 sm:w-48">
+      <div className={styles.clientBlock}>
         <img
           src={order.clientAvatar}
           alt={order.clientName}
@@ -137,8 +131,8 @@ function OrderCard({
       </div>
 
       {/* Center: details */}
-      <div className="flex flex-col gap-1.5 flex-1 min-w-0">
-        <div className="flex flex-wrap items-center gap-2">
+      <div className={styles.orderBody}>
+        <div className={styles.orderMeta}>
           <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--ink)' }}>{order.serviceType}</span>
           <StatusBadge status={order.status} />
         </div>
@@ -162,20 +156,20 @@ function OrderCard({
       </div>
 
       {/* Right: price + actions */}
-      <div className="flex flex-col items-end justify-between gap-3 shrink-0">
+      <div className={styles.orderAside}>
         {order.price !== null && (
           <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--dark)' }}>
             ${order.price}
           </div>
         )}
 
-        <div className="flex flex-col gap-2 items-end">
+        <div className={styles.orderActions}>
           {order.status === 'PENDING' && (
             <>
               <button
                 type="button"
-                className="btn btn-gold btn-sm"
-                style={{ minWidth: 120 }}
+                className="btn btn-sm"
+                style={{ minWidth: 120, background: 'var(--dark)', color: '#fff', borderColor: 'var(--dark)' }}
                 onClick={() => onAccept(order.id)}
               >
                 <Check size={13} />
@@ -276,14 +270,15 @@ export default function OrdersPage() {
   }
 
   return (
-    <div style={{ padding: '28px 32px', maxWidth: 960 }}>
+    <div className={styles.page}>
       {/* Page title */}
       <h2 style={{ fontSize: 22, fontWeight: 700, color: 'var(--dark)', marginBottom: 24 }}>
         Заявки и заказы
       </h2>
 
       {/* Tabs */}
-      <div className="flex items-center gap-0 mb-6" style={{ borderBottom: '1px solid var(--border)' }}>
+      <div className={styles.tabsWrap}>
+        <div className={styles.tabs} role="tablist" aria-label="Статусы заказов">
         {TABS.map((tab) => {
           const isActive = activeTab === tab.key;
           const count = countByStatus(tab.statuses);
@@ -291,27 +286,20 @@ export default function OrdersPage() {
             <button
               key={tab.key}
               type="button"
+              role="tab"
+              aria-selected={isActive}
               onClick={() => setActiveTab(tab.key)}
-              className="flex items-center gap-1.5 px-4 py-2.5 font-medium transition-colors"
+              className={`${styles.tabButton} ${isActive ? styles.tabButtonActive : ''}`}
               style={{
-                fontSize: 13,
-                color: isActive ? 'var(--gold)' : 'var(--muted)',
-                borderBottom: isActive ? '2px solid var(--gold)' : '2px solid transparent',
-                background: 'transparent',
-                marginBottom: -1,
-                whiteSpace: 'nowrap',
+                color: isActive ? 'var(--dark)' : 'var(--muted)',
               }}
             >
               {tab.label}
               {count > 0 && (
                 <span
-                  className="inline-flex items-center justify-center rounded-full"
+                  className={styles.tabCount}
                   style={{
-                    width: 18,
-                    height: 18,
-                    fontSize: 10,
-                    fontWeight: 700,
-                    background: isActive ? 'var(--gold)' : 'var(--border)',
+                    background: isActive ? 'var(--dark)' : 'var(--border)',
                     color: isActive ? '#fff' : 'var(--muted)',
                   }}
                 >
@@ -321,13 +309,14 @@ export default function OrdersPage() {
             </button>
           );
         })}
+        </div>
       </div>
 
       {/* Orders list */}
       {visibleOrders.length === 0 ? (
         <EmptyState />
       ) : (
-        <div className="flex flex-col gap-4">
+        <div className={styles.ordersList}>
           {visibleOrders.map((order) => (
             <OrderCard
               key={order.id}
