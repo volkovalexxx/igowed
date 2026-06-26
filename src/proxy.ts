@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getToken } from 'next-auth/jwt'
+import { getPostAuthRedirect } from './features/auth/authRedirect'
 
 function getSignedInRedirect(role: unknown, req: NextRequest) {
-  const target = role === 'VENDOR' ? '/dashboard/profile' : '/event'
+  const target = getPostAuthRedirect(role, req.nextUrl.searchParams.get('next'))
   return NextResponse.redirect(new URL(target, req.url))
 }
 

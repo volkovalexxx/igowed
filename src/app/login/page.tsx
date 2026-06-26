@@ -1,12 +1,18 @@
 'use client'
 
 import { FormEvent, useState } from 'react'
-import { signIn } from 'next-auth/react'
+import { getSession, signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { AuthPasswordField, AuthTextField } from '@/features/auth/AuthFields'
 import { AuthShell } from '@/features/auth/AuthShell'
 import { AuthLegal, AuthTabs, SocialButtons } from '@/features/auth/AuthShared'
+import { getPostAuthRedirect } from '@/features/auth/authRedirect'
 import styles from '@/features/auth/AuthShell.module.css'
+
+function getNextParam() {
+  if (typeof window === 'undefined') return null
+  return new URLSearchParams(window.location.search).get('next')
+}
 
 export default function LoginPage() {
   const router = useRouter()
@@ -34,7 +40,8 @@ export default function LoginPage() {
         return
       }
 
-      router.push('/')
+      const session = await getSession()
+      router.replace(getPostAuthRedirect(session?.user?.role, getNextParam()))
       router.refresh()
     } catch {
       setError('Не удалось войти. Попробуйте еще раз.')
@@ -50,7 +57,7 @@ export default function LoginPage() {
         <AuthTabs active="login" />
 
         <form className={styles.form} onSubmit={handleSubmit}>
-          <AuthTextField name="login" placeholder="Логин" autoComplete="email" required />
+          <AuthTextField name="login" placeholder="Логин" autoComplete="username" required />
           <AuthPasswordField />
           {error && <p className={styles.error}>{error}</p>}
           <button className={`${styles.button} ${styles.buttonNarrow}`} disabled={loading} type="submit">
