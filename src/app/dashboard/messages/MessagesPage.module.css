@@ -40,6 +40,84 @@
   padding: 12px 16px;
 }
 
+.bookingCard {
+  width: min(100%, 430px);
+  margin: 12px auto 18px;
+  border: 1px solid #9f9f9f;
+  border-radius: 3px;
+  overflow: hidden;
+  background: #f7f7f7;
+  color: var(--dark);
+}
+
+.bookingTitle {
+  border-bottom: 1px solid #9f9f9f;
+  padding: 18px 18px 17px;
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.bookingBody {
+  padding: 18px;
+  display: grid;
+  gap: 14px;
+}
+
+.bookingRow {
+  display: grid;
+  grid-template-columns: 170px minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+  font-size: 14px;
+  line-height: 1.25;
+}
+
+.bookingRow span {
+  font-weight: 700;
+}
+
+.bookingRow strong {
+  font-weight: 500;
+}
+
+.bookingActions {
+  margin-top: 8px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.bookingAccept,
+.bookingDecline,
+.bookingCounter {
+  min-height: 40px;
+  border: 0;
+  border-radius: 999px;
+  padding: 0 18px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.bookingAccept {
+  background: var(--dark);
+  color: #fff;
+}
+
+.bookingDecline {
+  background: #fff;
+  color: var(--dark);
+}
+
+.bookingCounter {
+  background: var(--gold);
+  color: #fff;
+}
+
 @media (max-width: 1024px) {
   .messagesShell {
     height: auto;
@@ -85,5 +163,37 @@
     position: sticky;
     bottom: 0;
     z-index: 2;
+  }
+
+  .bookingCard {
+    margin-inline: 0;
+  }
+
+  .bookingTitle {
+    padding: 14px;
+    font-size: 14px;
+  }
+
+  .bookingBody {
+    padding: 14px;
+    gap: 12px;
+  }
+
+  .bookingRow {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
+    font-size: 13px;
+  }
+
+  .bookingActions {
+    gap: 8px;
+  }
+
+  .bookingAccept,
+  .bookingDecline,
+  .bookingCounter {
+    min-height: 38px;
+    padding-inline: 12px;
+    font-size: 13px;
   }
 }

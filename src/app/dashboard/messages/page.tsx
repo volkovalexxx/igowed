@@ -216,6 +216,37 @@ function MessageBubble({ message }: { message: Message }) {
   );
 }
 
+function BookingOfferCard() {
+  const rows = [
+    { label: 'Получатель', value: 'Анна Фролова' },
+    { label: 'Отправитель', value: 'Фотограф Дмитрий Логинов' },
+    { label: 'Название услуги', value: 'Фотосъёмка' },
+    { label: 'Дата', value: '26.06.2026' },
+    { label: 'Стоимость', value: '1200 BYN' },
+    { label: 'Продолжительность / Сроки', value: '8 часов. Фото в обработке не позднее 3 мес. после свадьбы' },
+    { label: 'Детали, комментарии', value: 'Включает утро невесты, утро жениха, съёмку в ЗАГСе, прогулку после ЗАГСа, банкет' },
+  ];
+
+  return (
+    <div className={styles.bookingCard}>
+      <div className={styles.bookingTitle}>Бронирование услуги</div>
+      <div className={styles.bookingBody}>
+        {rows.map((row) => (
+          <div className={styles.bookingRow} key={row.label}>
+            <span>{row.label}</span>
+            <strong>{row.value}</strong>
+          </div>
+        ))}
+        <div className={styles.bookingActions}>
+          <button type="button" className={styles.bookingAccept}>Принять</button>
+          <button type="button" className={styles.bookingDecline}>Отклонить</button>
+        </div>
+        <button type="button" className={styles.bookingCounter}>Отправить встречное предложение</button>
+      </div>
+    </div>
+  );
+}
+
 /* ── Page ─────────────────────────────────────────────────────────────── */
 
 export default function MessagesPage() {
@@ -400,6 +431,7 @@ export default function MessagesPage() {
           {activeConv.messages.map((msg) => (
             <MessageBubble key={msg.id} message={msg} />
           ))}
+          <BookingOfferCard />
           <div ref={messagesEndRef} />
         </div>
 
