@@ -7,7 +7,7 @@ import { auth } from '@/lib/auth'
 
 export const metadata: Metadata = {
   title: 'Мои мероприятия | I GO WED',
-  description: 'Рабочий список свадебных мероприятий в I GO WED',
+  description: 'Список мероприятий в личном кабинете I GO WED',
 }
 
 export default async function EventsPage() {
