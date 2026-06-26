@@ -340,6 +340,12 @@ export function EventTasksPage({ eventId, initialGroups }: { eventId: string; in
     <div className={styles.page}>
       <Header eventId={eventId} />
       <main className={styles.content}>
+        <div className={styles.mobileContext}>
+          <Link href={`/event/${eventId}`} aria-label="Назад к мероприятию">
+            ‹
+          </Link>
+          <span>Список задач</span>
+        </div>
         <div className={styles.breadcrumbs}>Главная › Моя свадьба › Список задач</div>
         <div className={styles.mobileFilters}>
           <SelectPill label="Приоритетность" value={priority} onChange={(value) => setPriority(value as 'all' | TaskPriority)}>

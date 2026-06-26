@@ -142,6 +142,10 @@
   font-weight: 700;
 }
 
+.mobileContext {
+  display: none;
+}
+
 .taskLayout {
   display: grid;
   grid-template-columns: minmax(520px, 1fr) minmax(570px, 1.12fr);
@@ -544,9 +548,25 @@
   }
 
   .breadcrumbs {
-    margin-bottom: 34px;
+    margin-bottom: 22px;
     color: #5d5d5d;
     font-size: 12px;
+  }
+
+  .mobileContext {
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    color: #202222;
+    font-size: 18px;
+    font-weight: 800;
+  }
+
+  .mobileContext a {
+    color: #b8b8b8;
+    font-size: 30px;
+    line-height: 1;
   }
 
   .mobileFilters {

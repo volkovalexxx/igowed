@@ -304,6 +304,12 @@ export function EventDetailsPage({ event }: { event: EventRecord }) {
         </section>
 
         <section className={styles.eventIntro}>
+          <div className={styles.mobileContext}>
+            <Link href="/event" aria-label="Назад к мероприятиям">
+              ‹
+            </Link>
+            <span>{event.title}</span>
+          </div>
           <div className={styles.breadcrumbs}>Главная › Мероприятия › {event.title}</div>
           <div className={styles.eventGrid}>
             <EventCover event={event} />
