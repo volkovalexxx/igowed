@@ -164,6 +164,13 @@ function Sidebar() {
 /* ── Layout ─────────────────────────────────────────────────────────────── */
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const isFullBleedProfilePage = pathname === '/dashboard/favorites' || pathname === '/dashboard/shortlist';
+
+  if (isFullBleedProfilePage) {
+    return <>{children}</>;
+  }
+
   return (
     <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--paper)' }}>
       <Sidebar />
