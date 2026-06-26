@@ -1,0 +1,167 @@
+.page {
+  width: min(100%, 960px);
+  padding: 28px 32px;
+}
+
+.tabsWrap {
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.tabsWrap::-webkit-scrollbar {
+  display: none;
+}
+
+.tabs {
+  min-width: max-content;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tabButton {
+  min-height: 42px;
+  margin-bottom: -1px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  padding: 0 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    border-color 150ms ease,
+    color 150ms ease;
+}
+
+.tabButtonActive {
+  border-bottom-color: var(--dark);
+}
+
+.tabCount {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.ordersList {
+  display: grid;
+  gap: 14px;
+}
+
+.orderCard {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #fff;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: 190px minmax(0, 1fr) auto;
+  gap: 18px;
+}
+
+.clientBlock {
+  min-width: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.orderBody {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.orderMeta {
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.orderAside {
+  min-width: 134px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.orderActions {
+  display: grid;
+  justify-items: end;
+  gap: 8px;
+}
+
+@media (max-width: 1024px) {
+  .page {
+    width: 100%;
+    padding: 16px 12px 28px;
+  }
+
+  .tabsWrap {
+    margin-inline: -12px;
+    padding-inline: 12px;
+  }
+
+  .tabs {
+    gap: 6px;
+    padding-bottom: 1px;
+  }
+
+  .tabButton {
+    min-height: 38px;
+    padding: 0 12px;
+    font-size: 12px;
+  }
+
+  .orderCard {
+    padding: 14px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .orderAside {
+    min-width: 0;
+    align-items: stretch;
+  }
+
+  .orderActions {
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    justify-items: stretch;
+  }
+
+  .orderActions button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 420px) {
+  .page h2 {
+    margin-bottom: 16px !important;
+    font-size: 20px !important;
+  }
+
+  .clientBlock img {
+    width: 40px !important;
+    height: 40px !important;
+  }
+}
