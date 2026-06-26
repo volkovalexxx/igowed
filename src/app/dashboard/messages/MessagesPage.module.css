@@ -1,0 +1,89 @@
+.messagesShell {
+  height: calc(100vh - 0px);
+  max-height: 100vh;
+  display: flex;
+  overflow: hidden;
+}
+
+.conversationPanel {
+  width: 320px;
+  flex: 0 0 320px;
+  min-width: 0;
+}
+
+.panelHeader {
+  padding: 20px 16px 12px;
+}
+
+.conversationList {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.chatPanel {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--paper);
+}
+
+.chatHeader {
+  padding: 14px 20px;
+}
+
+.messagesArea {
+  padding: 16px 20px;
+}
+
+.inputBar {
+  padding: 12px 16px;
+}
+
+@media (max-width: 760px) {
+  .messagesShell {
+    height: auto;
+    min-height: calc(100svh - 99px);
+    max-height: none;
+    display: grid;
+    grid-template-rows: auto minmax(520px, 1fr);
+    overflow: visible;
+  }
+
+  .conversationPanel {
+    width: 100%;
+    max-height: 315px;
+    border-right: 0 !important;
+    border-bottom: 1px solid var(--border);
+    flex-basis: auto;
+    overflow: hidden;
+  }
+
+  .panelHeader {
+    padding: 14px 14px 10px;
+  }
+
+  .conversationList {
+    max-height: 210px;
+  }
+
+  .chatPanel {
+    min-height: 520px;
+  }
+
+  .chatHeader {
+    padding: 12px 14px;
+  }
+
+  .messagesArea {
+    padding: 14px 12px;
+  }
+
+  .inputBar {
+    gap: 8px !important;
+    padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
+  }
+}
