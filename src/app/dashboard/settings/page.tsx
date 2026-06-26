@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Toggle from '@/components/ui/Toggle';
 import Modal from '@/components/ui/Modal';
+import styles from './SettingsPage.module.css';
 
 /* ── Section wrapper ─────────────────────────────────────────────────────── */
 
@@ -14,33 +15,11 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <div
-      style={{
-        background: '#fff',
-        borderRadius: 12,
-        border: '1px solid var(--border, #E5E5E5)',
-        overflow: 'hidden',
-        marginBottom: 20,
-      }}
-    >
-      <div
-        style={{
-          padding: '18px 24px',
-          borderBottom: '1px solid var(--border, #E5E5E5)',
-        }}
-      >
-        <h2
-          style={{
-            margin: 0,
-            fontSize: 15,
-            fontWeight: 700,
-            color: 'var(--ink, #1A1A1A)',
-          }}
-        >
-          {title}
-        </h2>
+    <div className={styles.section}>
+      <div className={styles.sectionHead}>
+        <h2>{title}</h2>
       </div>
-      <div style={{ padding: '8px 24px 20px' }}>{children}</div>
+      <div className={styles.sectionBody}>{children}</div>
     </div>
   );
 }
@@ -59,15 +38,7 @@ function ToggleRow({
   onChange: (v: boolean) => void;
 }) {
   return (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '14px 0',
-        borderBottom: '1px solid var(--border, #E5E5E5)',
-      }}
-    >
+    <div className={styles.toggleRow}>
       <div>
         <div
           style={{
@@ -108,45 +79,14 @@ function Field({
   onChange: (v: string) => void;
 }) {
   return (
-    <div style={{ marginTop: 16 }}>
-      <label
-        style={{
-          display: 'block',
-          fontSize: 13,
-          fontWeight: 500,
-          color: 'var(--ink, #1A1A1A)',
-          marginBottom: 6,
-        }}
-      >
-        {label}
-      </label>
+    <div className={styles.field}>
+      <label>{label}</label>
       <input
         type={type}
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        style={{
-          width: '100%',
-          height: 40,
-          padding: '0 12px',
-          borderRadius: 8,
-          border: '1px solid var(--border-field, #707070)',
-          fontSize: 14,
-          color: 'var(--ink, #1A1A1A)',
-          background: '#fff',
-          outline: 'none',
-          fontFamily: 'inherit',
-          transition: 'border-color 150ms',
-          boxSizing: 'border-box',
-        }}
-        onFocus={(e) => {
-          (e.target as HTMLInputElement).style.borderColor = 'var(--gold, #D39D55)';
-          (e.target as HTMLInputElement).style.boxShadow = '0 0 0 3px rgba(211,157,85,0.12)';
-        }}
-        onBlur={(e) => {
-          (e.target as HTMLInputElement).style.borderColor = 'var(--border-field, #707070)';
-          (e.target as HTMLInputElement).style.boxShadow = 'none';
-        }}
+        className={styles.input}
       />
     </div>
   );
@@ -166,42 +106,12 @@ function SelectField({
   options: { value: string; label: string }[];
 }) {
   return (
-    <div style={{ flex: 1 }}>
-      <label
-        style={{
-          display: 'block',
-          fontSize: 13,
-          fontWeight: 500,
-          color: 'var(--ink, #1A1A1A)',
-          marginBottom: 6,
-        }}
-      >
-        {label}
-      </label>
+    <div className={styles.selectField}>
+      <label>{label}</label>
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        style={{
-          width: '100%',
-          height: 40,
-          padding: '0 12px',
-          borderRadius: 8,
-          border: '1px solid var(--border-field, #707070)',
-          fontSize: 14,
-          color: 'var(--ink, #1A1A1A)',
-          background: '#fff',
-          outline: 'none',
-          fontFamily: 'inherit',
-          appearance: 'auto',
-          cursor: 'pointer',
-          boxSizing: 'border-box',
-        }}
-        onFocus={(e) => {
-          (e.target as HTMLSelectElement).style.borderColor = 'var(--gold, #D39D55)';
-        }}
-        onBlur={(e) => {
-          (e.target as HTMLSelectElement).style.borderColor = 'var(--border-field, #707070)';
-        }}
+        className={styles.select}
       >
         {options.map((opt) => (
           <option key={opt.value} value={opt.value}>
@@ -261,14 +171,7 @@ export default function SettingsPage() {
   };
 
   return (
-    <div
-      style={{
-        maxWidth: 720,
-        margin: '0 auto',
-        padding: '32px 24px',
-        fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
-      }}
-    >
+    <div className={styles.page}>
       {/* Page title */}
       <h1
         style={{
@@ -301,14 +204,7 @@ export default function SettingsPage() {
           value={notifReviews}
           onChange={setNotifReviews}
         />
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            paddingTop: 14,
-          }}
-        >
+        <div className={styles.toggleRowLast}>
           <div>
             <div
               style={{
@@ -379,25 +275,7 @@ export default function SettingsPage() {
         <button
           type="button"
           onClick={handleSavePassword}
-          style={{
-            marginTop: 16,
-            padding: '10px 24px',
-            borderRadius: 8,
-            border: 'none',
-            background: 'var(--gold, #D39D55)',
-            color: '#fff',
-            fontSize: 14,
-            fontWeight: 600,
-            cursor: 'pointer',
-            fontFamily: 'inherit',
-            transition: 'background 150ms',
-          }}
-          onMouseEnter={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.background = 'var(--gold-dark, #B8863E)';
-          }}
-          onMouseLeave={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.background = 'var(--gold, #D39D55)';
-          }}
+          className={styles.primaryButton}
         >
           Сохранить
         </button>
@@ -405,7 +283,7 @@ export default function SettingsPage() {
 
       {/* ── Language & Currency ────────────────────────────────────── */}
       <Section title="Язык и валюта">
-        <div style={{ display: 'flex', gap: 16, marginTop: 8, flexWrap: 'wrap' }}>
+        <div className={styles.localeGrid}>
           <SelectField
             label="Язык интерфейса"
             value={language}
@@ -444,24 +322,7 @@ export default function SettingsPage() {
         <button
           type="button"
           onClick={() => setDeleteModalOpen(true)}
-          style={{
-            padding: '10px 24px',
-            borderRadius: 8,
-            border: '2px solid #E02C2C',
-            background: 'transparent',
-            color: '#E02C2C',
-            fontSize: 14,
-            fontWeight: 600,
-            cursor: 'pointer',
-            fontFamily: 'inherit',
-            transition: 'background 150ms, color 150ms',
-          }}
-          onMouseEnter={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.background = '#FEF2F2';
-          }}
-          onMouseLeave={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.background = 'transparent';
-          }}
+          className={styles.dangerButton}
         >
           Удалить аккаунт
         </button>
@@ -493,55 +354,23 @@ export default function SettingsPage() {
           placeholder="УДАЛИТЬ"
           value={deleteConfirmText}
           onChange={(e) => setDeleteConfirmText(e.target.value)}
-          style={{
-            width: '100%',
-            height: 40,
-            padding: '0 12px',
-            borderRadius: 8,
-            border: '1px solid var(--border-field, #707070)',
-            fontSize: 14,
-            outline: 'none',
-            fontFamily: 'inherit',
-            marginBottom: 16,
-            boxSizing: 'border-box',
-          }}
+          className={`${styles.input} ${styles.modalInput}`}
         />
-        <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
+        <div className={styles.modalActions}>
           <button
             type="button"
             onClick={() => {
               setDeleteModalOpen(false);
               setDeleteConfirmText('');
             }}
-            style={{
-              padding: '10px 20px',
-              borderRadius: 8,
-              border: '1px solid var(--border, #E5E5E5)',
-              background: '#fff',
-              color: 'var(--ink, #1A1A1A)',
-              fontSize: 14,
-              fontWeight: 500,
-              cursor: 'pointer',
-              fontFamily: 'inherit',
-            }}
+            className={styles.secondaryButton}
           >
             Отмена
           </button>
           <button
             type="button"
             disabled={deleteConfirmText !== 'УДАЛИТЬ'}
-            style={{
-              padding: '10px 20px',
-              borderRadius: 8,
-              border: 'none',
-              background: deleteConfirmText === 'УДАЛИТЬ' ? '#E02C2C' : '#E5E5E5',
-              color: deleteConfirmText === 'УДАЛИТЬ' ? '#fff' : '#9B9B9B',
-              fontSize: 14,
-              fontWeight: 600,
-              cursor: deleteConfirmText === 'УДАЛИТЬ' ? 'pointer' : 'not-allowed',
-              fontFamily: 'inherit',
-              transition: 'background 150ms, color 150ms',
-            }}
+            className={styles.deleteButton}
           >
             Удалить навсегда
           </button>
