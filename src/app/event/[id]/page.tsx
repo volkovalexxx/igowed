@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
 import { EventDetailsPage } from '@/features/events/details/EventDetailsPage'
+import { isEventFinished } from '@/features/events/review/eventPhase'
+import { eventReviewRepository } from '@/features/events/review/server/eventReview.repository'
+import { listEventVendorsForReview } from '@/features/events/review/server/eventReview.service'
 import { eventRepository } from '@/features/events/server/event.repository'
 import { getEventForUser } from '@/features/events/server/event.service'
 import { auth } from '@/lib/auth'
@@ -29,5 +32,8 @@ export default async function EventPage({ params }: EventPageProps) {
     notFound()
   }
 
-  return <EventDetailsPage event={event} />
+  const isFinished = isEventFinished(event.eventDate, new Date())
+  const reviewVendors = isFinished ? await listEventVendorsForReview(session.user.id, id, eventReviewRepository) : []
+
+  return <EventDetailsPage event={event} isFinished={isFinished} reviewVendors={reviewVendors} />
 }

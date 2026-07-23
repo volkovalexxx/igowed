@@ -1,4 +1,6 @@
 import Link from 'next/link'
+import { EventReviewSection } from '@/features/events/review/EventReviewSection'
+import type { EventVendorReview } from '@/features/events/review/eventReview.types'
 import { profileNavLinks } from '@/features/vendors/board/vendorBoard.data'
 import type { EventRecord } from '@/features/events/server/event.types'
 import { formatEventDateNumeric, formatEventDateShort, formatEventNumber, formatEventPlace, getDaysUntilEvent } from './eventDetails.format'
@@ -271,7 +273,14 @@ function VendorSlot({ slot }: { slot: (typeof contractorSlots)[number] }) {
   )
 }
 
-export function EventDetailsPage({ event }: { event: EventRecord }) {
+type EventDetailsPageProps = {
+  event: EventRecord
+  /** Мероприятие прошло: слоты подрядчиков уступают место карточкам с оценкой. */
+  isFinished: boolean
+  reviewVendors: EventVendorReview[]
+}
+
+export function EventDetailsPage({ event, isFinished, reviewVendors }: EventDetailsPageProps) {
   const place = formatEventPlace(event.country, event.city)
   const guests = formatEventNumber(event.guestMax ?? event.guestMin)
   const budget = formatEventNumber(event.budgetMax ?? event.budgetMin)
@@ -399,6 +408,9 @@ export function EventDetailsPage({ event }: { event: EventRecord }) {
           <SliderDots />
         </section>
 
+        {isFinished ? (
+          <EventReviewSection eventId={event.id} initialVendors={reviewVendors} />
+        ) : (
         <section className={styles.contractors}>
           <SectionHeader title="Подрядчики для вашего мероприятия" />
           <div className={styles.contractorGrid}>
@@ -415,6 +427,7 @@ export function EventDetailsPage({ event }: { event: EventRecord }) {
             <Link href="/catalog">Перейти в каталог</Link>
           </div>
         </section>
+        )}
 
         <section className={styles.recommendations}>
           <SectionHeader title="Подобрано для вас" action="" />
