@@ -49,3 +49,7 @@ next-env.d.ts
 
 # design references (local only)
 reference-image/
+
+# design source archives (local only)
+*.zip
+*.pdf

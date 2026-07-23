@@ -1,0 +1,187 @@
+.section {
+  max-width: 1508px;
+  margin: 0 auto;
+  padding: 0 82px 90px;
+}
+
+.sectionHeader {
+  margin-bottom: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.sectionHeader h2 {
+  margin: 0;
+  font-size: 26px;
+}
+
+.error {
+  margin: 0 0 18px;
+  color: #e53131;
+  font-size: 13px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.empty {
+  margin: 0;
+  padding: 28px 0;
+  color: #999;
+  font-size: 14px;
+}
+
+.card {
+  position: relative;
+  border-radius: 8px;
+  padding-bottom: 20px;
+  display: grid;
+  justify-items: center;
+  background: #f6f6f6;
+  overflow: hidden;
+}
+
+.roleTag {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 2;
+  border-radius: 6px;
+  padding: 5px 12px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #202020;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.workImage {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  display: block;
+  background-position: center;
+  background-size: cover;
+}
+
+.avatarWrap {
+  position: relative;
+  margin-top: -34px;
+  display: inline-flex;
+}
+
+.avatar {
+  width: 66px;
+  height: 66px;
+  border: 3px solid var(--gold);
+  border-radius: 50%;
+  background-position: center;
+  background-size: cover;
+}
+
+.pro {
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  padding: 1px 8px;
+  background: var(--gold);
+  color: #fff;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.name {
+  margin-top: 12px;
+  color: #202020;
+  font-size: 15px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.username {
+  margin: 2px 0 0;
+  color: #888;
+  font-size: 13px;
+}
+
+.rateRow {
+  margin-top: 14px;
+  padding: 0 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  color: #555;
+  font-size: 12px;
+}
+
+.stars {
+  display: inline-flex;
+  gap: 2px;
+  border-radius: 999px;
+  padding: 4px 8px;
+  background: #fff;
+}
+
+.star {
+  color: #d9d9d9;
+  font-size: 14px;
+  line-height: 1;
+  transition: color 0.12s ease;
+}
+
+.star:disabled {
+  cursor: progress;
+}
+
+.starFilled {
+  color: var(--gold);
+}
+
+@media (max-width: 1200px) {
+  .section {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .section {
+    padding: 0 16px 40px;
+  }
+
+  .sectionHeader h2 {
+    font-size: 18px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 13px;
+  }
+
+  .avatar {
+    width: 54px;
+    height: 54px;
+  }
+
+  .name {
+    font-size: 13px;
+  }
+
+  .rateRow {
+    flex-direction: column;
+    gap: 6px;
+    font-size: 11px;
+  }
+}

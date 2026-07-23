@@ -76,6 +76,7 @@ model Event {
   guests           EventGuest[]
   budgetCategories EventBudgetCategory[]
   timelines        EventTimeline[]
+  vendors          EventVendor[]
 
   @@index([userId])
   @@index([eventDate])
@@ -129,6 +130,22 @@ model EventGuest {
 
   @@index([eventId])
   @@index([rsvpStatus])
+}
+
+/// Подрядчик, занятый на мероприятии. Роль повторяет слот на странице мероприятия.
+model EventVendor {
+  id        String   @id @default(cuid())
+  eventId   String
+  vendorId  String
+  role      String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+
+  event  Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  vendor Vendor @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, vendorId])
+  @@index([eventId])
 }
 
 model EventBudgetCategory {
@@ -258,6 +275,7 @@ model Vendor {
   favorites       Favorite[]
   shortlistedBy   ShortlistItem[]
   bookings        Booking[]
+  events          EventVendor[]
   bannerAds       BannerAd[]
 }
 
@@ -326,12 +344,17 @@ model Review {
   id        String   @id @default(cuid())
   vendorId  String
   userId    String
+  eventId   String?
   rating    Int
   text      String?  @db.Text
   createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 
   vendor Vendor @relation(fields: [vendorId], references: [id], onDelete: Cascade)
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([vendorId])
+  @@index([userId, eventId])
 }
 
 model Favorite {
