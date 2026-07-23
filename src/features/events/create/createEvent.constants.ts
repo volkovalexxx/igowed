@@ -1,4 +1,6 @@
-export const eventWorkspaceTabs = ['Моя свадьба', 'Избранное', 'Список дел', 'Список гостей', 'Рассадка', 'Тайминг', 'Бюджет']
+import { getWorkspaceTabLabels } from '@/features/events/workspace/workspaceTabs'
+
+export const eventWorkspaceTabs = getWorkspaceTabLabels()
 
 export const eventFormats = ['Официальное', 'Камерное', 'Вечеринка', 'Open-air', 'Неформальное', 'Тематическое']
 
