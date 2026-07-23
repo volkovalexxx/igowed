@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import {
   createBudgetItemForEvent,
+  getBudgetSummaryCurrency,
   isEventBudgetError,
   listBudgetCategoriesForEvent,
   updateBudgetItemForEvent,
@@ -17,6 +18,7 @@ function itemRecord(overrides = {}) {
 
 function deps(overrides = {}) {
   return {
+    findSummaryCurrency: vi.fn().mockResolvedValue('BYN'),
     listCategories: vi.fn().mockResolvedValue([categoryRecord()]),
     seedDefaultCategories: vi.fn().mockResolvedValue([categoryRecord()]),
     createCategory: vi.fn().mockResolvedValue(categoryRecord()),
@@ -44,6 +46,33 @@ describe('listBudgetCategoriesForEvent', () => {
     await listBudgetCategoriesForEvent('u1', 'evt-1', dependencies)
 
     expect(dependencies.seedDefaultCategories).toHaveBeenCalledWith('u1', 'evt-1')
+  })
+})
+
+describe('getBudgetSummaryCurrency', () => {
+  it('берёт валюту сводки с мероприятия', async () => {
+    const dependencies = deps({ findSummaryCurrency: vi.fn().mockResolvedValue('USD') })
+
+    expect(await getBudgetSummaryCurrency('u1', 'evt-1', dependencies)).toBe('USD')
+  })
+
+  it('падает на BYN, если в базе мусор', async () => {
+    const dependencies = deps({ findSummaryCurrency: vi.fn().mockResolvedValue('BTC') })
+
+    expect(await getBudgetSummaryCurrency('u1', 'evt-1', dependencies)).toBe('BYN')
+  })
+
+  it('падает на BYN для чужого мероприятия', async () => {
+    const dependencies = deps({ findSummaryCurrency: vi.fn().mockResolvedValue(null) })
+
+    expect(await getBudgetSummaryCurrency('u1', 'evt-9', dependencies)).toBe('BYN')
+  })
+
+  it('не ходит в базу без пользователя', async () => {
+    const dependencies = deps()
+    await getBudgetSummaryCurrency('', 'evt-1', dependencies)
+
+    expect(dependencies.findSummaryCurrency).not.toHaveBeenCalled()
   })
 })
 

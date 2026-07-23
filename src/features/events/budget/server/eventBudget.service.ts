@@ -1,3 +1,4 @@
+import { isCurrencyCode, type CurrencyCode } from '@/lib/currency/currency.types'
 import { mapBudgetCategoryRecord, mapBudgetItemRecord } from './eventBudget.mapper'
 import {
   EventBudgetValidationError,
@@ -6,7 +7,10 @@ import {
   parseUpdateItemInput,
 } from './eventBudget.validation'
 
+export const FALLBACK_SUMMARY_CURRENCY: CurrencyCode = 'BYN'
+
 type EventBudgetDeps = {
+  findSummaryCurrency(userId: string, eventId: string): Promise<string | null>
   listCategories(userId: string, eventId: string): Promise<Parameters<typeof mapBudgetCategoryRecord>[0][]>
   seedDefaultCategories(userId: string, eventId: string): Promise<Parameters<typeof mapBudgetCategoryRecord>[0][]>
   createCategory(userId: string, eventId: string, title: string): Promise<Parameters<typeof mapBudgetCategoryRecord>[0] | null>
@@ -39,6 +43,14 @@ export async function listBudgetCategoriesForEvent(userId: string, eventId: stri
 
   const seeded = await deps.seedDefaultCategories(userId, eventId)
   return seeded.map(mapBudgetCategoryRecord)
+}
+
+/** Валюта сводки живёт на мероприятии; неизвестное значение из БД не должно ломать экран. */
+export async function getBudgetSummaryCurrency(userId: string, eventId: string, deps: EventBudgetDeps): Promise<CurrencyCode> {
+  if (!userId || !eventId) return FALLBACK_SUMMARY_CURRENCY
+
+  const stored = await deps.findSummaryCurrency(userId, eventId)
+  return isCurrencyCode(stored) ? stored : FALLBACK_SUMMARY_CURRENCY
 }
 
 export async function createBudgetCategoryForEvent(userId: string, eventId: string, rawInput: unknown, deps: EventBudgetDeps) {

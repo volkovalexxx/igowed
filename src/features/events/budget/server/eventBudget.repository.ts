@@ -11,6 +11,15 @@ const categoryInclude = {
 }
 
 export const eventBudgetRepository = {
+  async findSummaryCurrency(userId: string, eventId: string) {
+    const event = await prisma.event.findFirst({
+      where: { id: eventId, userId },
+      select: { budgetCurrency: true },
+    })
+
+    return event?.budgetCurrency ?? null
+  },
+
   async listCategories(userId: string, eventId: string) {
     return prisma.eventBudgetCategory.findMany({
       where: { eventId, event: { userId } },
