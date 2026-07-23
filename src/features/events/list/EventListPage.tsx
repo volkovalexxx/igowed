@@ -1,9 +1,8 @@
 import Link from 'next/link'
 import type { EventRecord } from '@/features/events/server/event.types'
+import { profileNavLinks } from '@/features/vendors/board/vendorBoard.data'
 import { formatEventDateCompact, formatEventPlaceShort } from './eventList.format'
 import styles from './EventList.module.css'
-
-const profileLinks = ['Профиль', 'Мероприятия', 'Избранное', 'Шортлист', 'Календарь занятости', 'Отзывы']
 
 const placeholderEvents = [
   'Свадьба Анны и Максима',
@@ -54,9 +53,14 @@ function Header() {
         </div>
       </div>
       <nav className={styles.profileNav} aria-label="Навигация профиля">
-        {profileLinks.map((link) => (
-          <Link className={link === 'Мероприятия' ? styles.activeProfileLink : ''} href={link === 'Мероприятия' ? '/event' : '#'} key={link}>
-            {link}
+        {profileNavLinks.map((link) => (
+          <Link
+            className={link.href === '/event' ? styles.activeProfileLink : ''}
+            href={link.href}
+            key={link.label}
+            aria-current={link.href === '/event' ? 'page' : undefined}
+          >
+            {link.label}
           </Link>
         ))}
       </nav>
