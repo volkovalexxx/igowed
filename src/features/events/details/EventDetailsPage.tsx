@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { profileNavLinks } from '@/features/vendors/board/vendorBoard.data'
 import type { EventRecord } from '@/features/events/server/event.types'
 import { formatEventDateNumeric, formatEventDateShort, formatEventNumber, formatEventPlace, getDaysUntilEvent } from './eventDetails.format'
 import styles from './EventDetails.module.css'
@@ -154,12 +155,11 @@ function Header() {
         </div>
       </header>
       <nav className={styles.subnav} aria-label="Разделы профиля">
-        <Link href="/dashboard/profile">Профиль</Link>
-        <Link href="/event">Мероприятия</Link>
-        <Link href="/dashboard/favorites">Избранное</Link>
-        <Link href="/catalog">Шортлист</Link>
-        <Link href="/dashboard">Календарь занятости</Link>
-        <Link href="/dashboard">Отзывы</Link>
+        {profileNavLinks.map((link) => (
+          <Link href={link.href} key={link.label}>
+            {link.label}
+          </Link>
+        ))}
       </nav>
     </>
   )

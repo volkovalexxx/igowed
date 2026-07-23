@@ -6,18 +6,18 @@ import { loadVendorBoard } from '@/features/vendors/board/server/vendorBoard.ser
 import { auth } from '@/lib/auth'
 
 export const metadata: Metadata = {
-  title: 'Избранное | I GO WED',
-  description: 'Избранные подрядчики и рекомендации в личном кабинете I GO WED',
+  title: 'Шорт-лист | I GO WED',
+  description: 'Отобранные подрядчики для вашего мероприятия в личном кабинете I GO WED',
 }
 
-export default async function FavoritesRoute() {
+export default async function ShortlistRoute() {
   const session = await auth()
 
   if (!session?.user?.id) {
-    redirect('/login?next=/dashboard/favorites')
+    redirect('/login?next=/dashboard/shortlist')
   }
 
-  const board = await loadVendorBoard(session.user.id, 'favorites', vendorBoardRepository)
+  const board = await loadVendorBoard(session.user.id, 'shortlist', vendorBoardRepository)
 
-  return <VendorBoardPage board={board} kind="favorites" />
+  return <VendorBoardPage board={board} kind="shortlist" />
 }
