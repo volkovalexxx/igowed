@@ -43,35 +43,37 @@ model User {
   bookings         Booking[]
   favorites        Favorite[]
   reviews          Review[]
-  sentMessages     Message[] @relation("SentMessages")
-  receivedMessages Message[] @relation("ReceivedMessages")
+  sentMessages     Message[]  @relation("SentMessages")
+  receivedMessages Message[]  @relation("ReceivedMessages")
 }
 
 model Event {
-  id          String   @id @default(cuid())
-  userId      String
-  eventType   String
-  title       String
-  eventDate   DateTime?
-  eventTime   String?
-  country     String?
-  city        String?
-  brideName   String?
-  groomName   String?
-  guestMin    Int?
-  guestMax    Int?
-  budgetMin   Int?
-  budgetMax   Int?
-  format      String?
-  atmospheres String[] @default([])
-  notes       String?  @db.Text
-  coverUrl    String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id             String    @id @default(cuid())
+  userId         String
+  eventType      String
+  title          String
+  eventDate      DateTime?
+  eventTime      String?
+  country        String?
+  city           String?
+  brideName      String?
+  groomName      String?
+  guestMin       Int?
+  guestMax       Int?
+  budgetMin      Int?
+  budgetMax      Int?
+  budgetCurrency String    @default("BYN")
+  format         String?
+  atmospheres    String[]  @default([])
+  notes          String?   @db.Text
+  coverUrl       String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  taskLists EventTaskList[]
-  guests EventGuest[]
+  user             User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  taskLists        EventTaskList[]
+  guests           EventGuest[]
+  budgetCategories EventBudgetCategory[]
 
   @@index([userId])
   @@index([eventDate])
@@ -85,7 +87,7 @@ model EventTaskList {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  event Event       @relation(fields: [eventId], references: [id], onDelete: Cascade)
   tasks EventTask[]
 
   @@index([eventId])
@@ -127,6 +129,36 @@ model EventGuest {
   @@index([rsvpStatus])
 }
 
+model EventBudgetCategory {
+  id        String   @id @default(cuid())
+  eventId   String
+  title     String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  event Event             @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  items EventBudgetItem[]
+
+  @@index([eventId])
+}
+
+model EventBudgetItem {
+  id         String   @id @default(cuid())
+  categoryId String
+  title      String
+  cost       Int      @default(0)
+  paid       Int      @default(0)
+  currency   String   @default("BYN")
+  order      Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  category EventBudgetCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@index([categoryId])
+}
+
 model MediaAsset {
   id          String   @id @default(cuid())
   ownerType   String
@@ -145,18 +177,18 @@ model MediaAsset {
 }
 
 model Vendor {
-  id           String @id @default(cuid())
-  userId       String @unique
-  slug         String @unique
-  firstName    String
-  lastName     String
-  username     String @unique
-  bio          String? @db.Text
-  avatar       String?
-  isPro        Boolean @default(false)
+  id        String  @id @default(cuid())
+  userId    String  @unique
+  slug      String  @unique
+  firstName String
+  lastName  String
+  username  String  @unique
+  bio       String? @db.Text
+  avatar    String?
+  isPro     Boolean @default(false)
 
-  country      String   @default("Беларусь")
-  cities       String[]
+  country String   @default("Беларусь")
+  cities  String[]
 
   phone        String?
   phone2       String?
@@ -174,17 +206,17 @@ model Vendor {
   galleryDisplay DisplayMode @default(VERTICAL)
   cardDisplay    DisplayMode @default(VERTICAL)
 
-  rating       Float   @default(0)
-  reviewCount  Int     @default(0)
+  rating       Float  @default(0)
+  reviewCount  Int    @default(0)
   pricePerHour Int?
-  currency     String  @default("RUB")
+  currency     String @default("RUB")
 
   isActive   Boolean  @default(true)
   isVerified Boolean  @default(false)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   services        VendorService[]
   specializations Specialization[]
   photos          Photo[]
@@ -195,8 +227,8 @@ model Vendor {
 }
 
 model Category {
-  id    String @id @default(cuid())
-  slug  String @unique
+  id    String  @id @default(cuid())
+  slug  String  @unique
   name  String
   icon  String?
   image String?
@@ -207,12 +239,12 @@ model Category {
 }
 
 model Service {
-  id         String @id @default(cuid())
+  id         String  @id @default(cuid())
   categoryId String
-  slug       String @unique
+  slug       String  @unique
   name       String
   image      String?
-  order      Int    @default(0)
+  order      Int     @default(0)
 
   category       Category        @relation(fields: [categoryId], references: [id])
   vendorServices VendorService[]
