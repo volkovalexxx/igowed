@@ -6,91 +6,10 @@ import { useMemo, useState } from 'react'
 import { booleanLabels, rsvpLabels, sideLabels } from './eventGuests.data'
 import { filterGuestsByStatus, getRsvpLabel, getSideLabel } from './eventGuests.format'
 import type { EventGuest, GuestRsvpStatus, GuestSide } from './eventGuests.types'
+import { EventWorkspaceChrome } from '@/features/events/workspace/EventWorkspaceChrome'
 import styles from './EventGuestsPage.module.css'
 
 type GuestPatch = Partial<Pick<EventGuest, 'fullName' | 'rsvpStatus' | 'side' | 'needsTransfer' | 'needsAccommodation' | 'comment'>>
-
-function Header({ eventId }: { eventId: string }) {
-  return (
-    <>
-      <header className={styles.topbar}>
-        <div className={styles.topbarInner}>
-          <Link className={styles.logo} href="/">
-            I GO WED
-          </Link>
-          <nav className={styles.mainNav} aria-label="Основная навигация">
-            <Link href="/">Главная</Link>
-            <Link href="/catalog?cat=venues">Площадки</Link>
-            <Link href="/catalog">Каталог</Link>
-            <Link href="/catalog?cat=photo">Фото</Link>
-            <Link href="/blog">Блог</Link>
-          </nav>
-          <div className={styles.headerActions}>
-            <Link className={styles.goldButton} href="/event/new">
-              Создать мероприятие
-            </Link>
-            <span className={styles.currency}>RUB⌄</span>
-            <span className={styles.currency}>RU⌄</span>
-            <button className={styles.iconButton} type="button" aria-label="Поиск">
-              ⌕
-            </button>
-            <button className={styles.iconButton} type="button" aria-label="Уведомления">
-              ♡<span className={styles.badge}>123</span>
-            </button>
-            <button className={styles.iconButton} type="button" aria-label="Сообщения">
-              ✉<span className={styles.badge}>1</span>
-            </button>
-            <span className={styles.user}>Анна</span>
-            <button className={styles.menuButton} type="button" aria-label="Меню">
-              <span />
-              <span />
-              <span />
-            </button>
-          </div>
-        </div>
-      </header>
-      <nav className={styles.workspaceNav} aria-label="Разделы мероприятия">
-        <Link href={`/event/${eventId}`}>Моя свадьба</Link>
-        <Link href="/dashboard/favorites">Избранное</Link>
-        <Link href={`/event/${eventId}/tasks`}>Список задач</Link>
-        <Link className={styles.activeTab} href={`/event/${eventId}/guests`}>
-          Список гостей
-        </Link>
-        <Link href="#">Рассадка</Link>
-        <Link href="#">Тайминг</Link>
-        <Link href="#">Бюджет</Link>
-      </nav>
-    </>
-  )
-}
-
-function Footer() {
-  return (
-    <footer className={styles.footer}>
-      <div className={styles.footerInner}>
-        <div>
-          <p className={styles.footerLogo}>I GO WED</p>
-          <div className={styles.footerLinks}>
-            <Link href="#">Правила</Link>
-            <Link href="#">Обратная связь</Link>
-            <Link href="#">О нас</Link>
-          </div>
-        </div>
-        <div className={styles.footerLinks}>
-          <Link href="#">Реклама</Link>
-          <Link href="#">Логотипы I GO WED</Link>
-          <Link href="#">Политика конфиденциальности</Link>
-        </div>
-        <div className={styles.footerPills}>
-          <span className={styles.footerPill}>USD&nbsp;&nbsp; Доллар США⌄</span>
-          <span className={styles.footerPill}>RU&nbsp;&nbsp; Русский⌄</span>
-        </div>
-        <div className={styles.age}>18+</div>
-      </div>
-      <div className={styles.copyright}>©2025 Сообщество свадебных и семейных фотографов | I GO WED</div>
-    </footer>
-  )
-}
 
 function BooleanSelect({ value, onChange }: { value: boolean; onChange(value: boolean): void }) {
   return (
@@ -186,8 +105,7 @@ export function EventGuestsPage({ eventId, initialGuests }: { eventId: string; i
   }
 
   return (
-    <div className={styles.page}>
-      <Header eventId={eventId} />
+    <EventWorkspaceChrome active="guests" eventId={eventId}>
       <main className={styles.content}>
         <div className={styles.mobileContext}>
           <Link href={`/event/${eventId}`} aria-label="Назад к мероприятию">
@@ -270,7 +188,6 @@ export function EventGuestsPage({ eventId, initialGuests }: { eventId: string; i
           })}
         </section>
       </main>
-      <Footer />
-    </div>
+    </EventWorkspaceChrome>
   )
 }
