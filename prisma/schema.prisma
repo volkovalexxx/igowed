@@ -74,6 +74,7 @@ model Event {
   taskLists        EventTaskList[]
   guests           EventGuest[]
   budgetCategories EventBudgetCategory[]
+  timelines        EventTimeline[]
 
   @@index([userId])
   @@index([eventDate])
@@ -157,6 +158,38 @@ model EventBudgetItem {
   category EventBudgetCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
   @@index([categoryId])
+}
+
+model EventTimeline {
+  id        String   @id @default(cuid())
+  eventId   String
+  title     String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  event   Event                @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  entries EventTimelineEntry[]
+
+  @@index([eventId])
+}
+
+model EventTimelineEntry {
+  id           String   @id @default(cuid())
+  timelineId   String
+  startTime    String
+  endTime      String
+  title        String
+  location     String?
+  participants String[] @default([])
+  comment      String?  @db.Text
+  order        Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  timeline EventTimeline @relation(fields: [timelineId], references: [id], onDelete: Cascade)
+
+  @@index([timelineId])
 }
 
 model MediaAsset {
