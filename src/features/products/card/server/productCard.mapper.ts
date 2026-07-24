@@ -14,7 +14,7 @@ type ProductRecord = {
   category: { name: string; slug: string } | null
   photos: { id: string; url: string }[]
   attributes: { id: string; label: string; value: string }[]
-  vendor: { slug: string; firstName: string; lastName: string; username: string }
+  vendor: { userId: string; slug: string; firstName: string; lastName: string; username: string }
 }
 
 export function mapProductCard(record: ProductRecord): ProductCard {
@@ -38,6 +38,7 @@ export function mapProductCard(record: ProductRecord): ProductCard {
       value: attribute.value,
     })),
     vendor: {
+      userId: record.vendor.userId,
       slug: record.vendor.slug,
       name: `${record.vendor.firstName} ${record.vendor.lastName}`.trim(),
       username: record.vendor.username,

@@ -8,7 +8,7 @@ export const productCardRepository = {
         category: { select: { name: true, slug: true } },
         photos: { orderBy: { order: 'asc' } },
         attributes: { orderBy: { order: 'asc' } },
-        vendor: { select: { slug: true, firstName: true, lastName: true, username: true } },
+        vendor: { select: { userId: true, slug: true, firstName: true, lastName: true, username: true } },
       },
     })
   },
