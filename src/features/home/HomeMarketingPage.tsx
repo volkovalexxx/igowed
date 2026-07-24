@@ -24,16 +24,14 @@ import {
 import {
   STATS,
   FEATURES,
-  PICKED,
   ADVANTAGES,
   SERVICES,
   VENUES,
   PHOTO_OF_DAY,
-  BLOG,
-  PHOTOGRAPHERS,
   DRESSES,
   SEO_TAGS,
 } from '@/data/homeData';
+import type { HomeBlogPreview, HomeVendorPreview } from '@/features/home/preview/homePreview.types';
 
 /* ── Helpers ─────────────────────────────────────────────────────── */
 
@@ -124,12 +122,12 @@ function getAdvantageIcon(icon: string, size = 22): React.ReactNode {
 
 /* ── Page ─────────────────────────────────────────────────────────── */
 
-export default function HomePage() {
+export default function HomePage({ vendorsPreview, blogPreview }: { vendorsPreview: HomeVendorPreview[]; blogPreview: HomeBlogPreview[] }) {
   const [activeSlide, setActiveSlide] = useState(0);
-  const [favs, setFavs] = useState<Set<number>>(new Set());
+  const [favs, setFavs] = useState<Set<string>>(new Set());
   const [dateVal, setDateVal] = useState('');
 
-  function toggleFav(id: number) {
+  function toggleFav(id: string) {
     setFavs((prev) => {
       const next = new Set(prev);
       next.has(id) ? next.delete(id) : next.add(id);
@@ -434,7 +432,7 @@ export default function HomePage() {
                 gap: 14,
               }}
             >
-              {PICKED.map((item) => (
+              {vendorsPreview.slice(0, 5).map((item) => (
                 <div
                   key={item.id}
                   style={{
@@ -942,7 +940,7 @@ export default function HomePage() {
                 gap: 16,
               }}
             >
-              {BLOG.map((post) => (
+              {blogPreview.map((post) => (
                 <div
                   key={post.id}
                   style={{
@@ -1021,7 +1019,7 @@ export default function HomePage() {
                     >
                       <span style={{ fontSize: 11, color: 'var(--muted)' }}>{post.date}</span>
                       <a
-                        href="#"
+                        href={`/blog/${post.slug}`}
                         style={{
                           fontSize: 12,
                           color: 'var(--gold)',
@@ -1061,7 +1059,7 @@ export default function HomePage() {
                 gap: 14,
               }}
             >
-              {PHOTOGRAPHERS.map((ph) => (
+              {vendorsPreview.map((ph) => (
                 <div
                   key={ph.id}
                   style={{
