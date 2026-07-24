@@ -20,6 +20,8 @@ describe('media service', () => {
     const storage: MediaStorage = {
       getPublicUrl: (objectKey) => `https://cdn.example.com/${objectKey}`,
       createUploadUrl: vi.fn(async (objectKey) => `https://storage.example.com/${objectKey}?signature=test`),
+      downloadObject: vi.fn(async () => Buffer.alloc(0)),
+      uploadObject: vi.fn(async () => undefined),
     }
     const repository: MediaRepository = {
       createAsset: vi.fn(async (input) => ({

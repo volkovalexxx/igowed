@@ -132,6 +132,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      redis:
+        condition: service_healthy
       api:
         condition: service_started
     environment:
@@ -141,6 +143,7 @@ services:
       NEXTAUTH_URL: http://localhost:3000
       NEXT_PUBLIC_API_URL: http://localhost:4000/api/v1
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/igowed?schema=public
+      REDIS_URL: redis://redis:6379
     ports:
       - "3000:3000"
     volumes:

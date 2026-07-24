@@ -3,6 +3,11 @@ import bcrypt from 'bcryptjs'
 import prisma from '@/lib/prisma'
 import { createRegisterAccount, isRegisterError } from '@/features/auth/server/register.service'
 import type { RegisterDeps } from '@/features/auth/server/register.types'
+import { enforceRateLimit } from '@/lib/rate-limit/enforce'
+
+function clientIp(req: NextRequest): string {
+  return req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || req.headers.get('x-real-ip') || 'unknown'
+}
 
 const registerDeps: RegisterDeps = {
   hashPassword: (password) => bcrypt.hash(password, 12),
@@ -26,6 +31,9 @@ const registerDeps: RegisterDeps = {
 }
 
 export async function POST(req: NextRequest) {
+  const limited = await enforceRateLimit('register', clientIp(req))
+  if (limited) return limited
+
   try {
     const user = await createRegisterAccount(await req.json(), registerDeps)
     return NextResponse.json({ user }, { status: 201 })
