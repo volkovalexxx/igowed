@@ -1,7 +1,10 @@
+import 'dotenv/config'
 import { PrismaClient, Role, DisplayMode } from '../src/generated/prisma'
+import { PrismaPg } from '@prisma/adapter-pg'
 import bcrypt from 'bcryptjs'
 
-const prisma = new PrismaClient()
+const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL ?? '' })
+const prisma = new PrismaClient({ adapter })
 
 const u = (id: string, w = 800, h = 800) =>
   `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&h=${h}&q=80`
@@ -107,6 +110,77 @@ async function main() {
       update: {},
       create: { vendorId: vendor.id, categoryId: photoCategory.id, serviceId: (await prisma.service.findUnique({ where: { slug: 'wedding-photo' } }))!.id, price: vd.pricePerHour, currency: 'RUB', unit: 'час' },
     })
+  }
+
+  // Products (карточки товаров)
+  const firstVendor = await prisma.vendor.findFirst({ where: { username: 'loginov_pho' } })
+
+  if (firstVendor) {
+    const transportCategory = categories.find((c) => c.slug === 'transport') ?? null
+    const dressCategory = categories.find((c) => c.slug === 'dresses') ?? null
+
+    const products = [
+      {
+        slug: 'mercedes-sprinter-lux',
+        categoryId: transportCategory?.id ?? null,
+        title: 'Мерседес Спринтер ЛЮКС 20 мест белый салон',
+        description:
+          'Идеальный выбор для трансфера на мероприятие, деловой встречи или праздника. Микроавтобус премиум-класса с белоснежным салоном, мягкими сиденьями и современной системой климат-контроля.',
+        price: 2800,
+        currency: 'RUB',
+        unit: 'час',
+        pricePrefix: true,
+        ctaLabel: 'Связаться',
+        city: 'Гродно',
+        photos: [u('1549317661-bd32c8ce0db2'), u('1503376780353-7e6692767b70'), u('1502877338535-766e1452684a'), u('1494976388531-d1058494cdd8')],
+        attributes: [
+          { label: 'Цвет', value: 'белый' },
+          { label: 'Год выпуска', value: '2020' },
+          { label: 'Вместимость', value: 'до 20 человек' },
+        ],
+      },
+      {
+        slug: 'wedding-dress-elza',
+        categoryId: dressCategory?.id ?? null,
+        title: 'Свадебное платье А-силуэт «Эльза»',
+        description:
+          'Элегантное и утончённое свадебное платье классического А-силуэта — идеальный выбор для невесты, мечтающей о сказочной свадьбе. Лёгкий акцент на талии мягко подчёркивает фигуру, а плавно расширяющаяся юбка создаёт женственный и романтичный образ.',
+        price: 80000,
+        currency: 'RUB',
+        unit: null,
+        pricePrefix: false,
+        ctaLabel: 'Записаться на примерку',
+        city: 'Гродно',
+        photos: [u('1594744803329-e58b31de8bf5'), u('1519741497674-611481863552'), u('1525258946800-98cfd641d0de'), u('1583939003579-730e3918a45a')],
+        attributes: [
+          { label: 'Доступность', value: 'продажа' },
+          { label: 'Размер', value: '36, 38' },
+          { label: 'Силуэт', value: 'А-силуэт' },
+          { label: 'Цвет', value: 'айвори' },
+          { label: 'Бренд', value: 'victiry' },
+          { label: 'Страна производства', value: 'Италия' },
+        ],
+      },
+    ]
+
+    for (const pd of products) {
+      const { photos, attributes, ...productData } = pd
+      const product = await prisma.product.upsert({
+        where: { slug: pd.slug },
+        update: {},
+        create: { ...productData, vendorId: firstVendor.id },
+      })
+
+      await prisma.productPhoto.deleteMany({ where: { productId: product.id } })
+      await prisma.productPhoto.createMany({
+        data: photos.map((url, index) => ({ productId: product.id, url, order: index })),
+      })
+
+      await prisma.productAttribute.deleteMany({ where: { productId: product.id } })
+      await prisma.productAttribute.createMany({
+        data: attributes.map((attribute, index) => ({ productId: product.id, ...attribute, order: index })),
+      })
+    }
   }
 
   // Blog posts
