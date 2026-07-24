@@ -2,6 +2,7 @@ import type { BoardVendor } from '../vendorBoard.types'
 
 type VendorRecord = {
   id: string
+  userId: string
   slug: string
   username: string
   firstName: string
@@ -17,6 +18,7 @@ type VendorRecord = {
 export function mapBoardVendorRecord(vendor: VendorRecord): BoardVendor {
   return {
     id: vendor.id,
+    userId: vendor.userId,
     slug: vendor.slug,
     username: vendor.username,
     firstName: vendor.firstName,

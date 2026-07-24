@@ -37,9 +37,9 @@ export function VendorMiniCard({ vendor, index, removeLabel }: VendorMiniCardPro
         <Link className={styles.profileButton} href={`/vendor/${vendor.slug}`}>
           Перейти в профиль
         </Link>
-        <button className={styles.messageButton} type="button">
+        <Link className={styles.messageButton} href={`/dashboard/messages?to=${vendor.userId}`}>
           Отправить сообщение
-        </button>
+        </Link>
       </div>
     </article>
   )

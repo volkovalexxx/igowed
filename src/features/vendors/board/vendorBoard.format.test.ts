@@ -5,6 +5,7 @@ import type { BoardVendor } from './vendorBoard.types'
 function vendor(overrides: Partial<BoardVendor> = {}): BoardVendor {
   return {
     id: 'v1',
+    userId: 'u1',
     slug: 'dmitry-loginov',
     username: 'loginov_pho',
     firstName: 'Дмитрий',
