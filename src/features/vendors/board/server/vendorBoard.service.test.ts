@@ -5,6 +5,7 @@ import type { BoardVendor } from '../vendorBoard.types'
 function boardVendor(id: string): BoardVendor {
   return {
     id,
+    userId: `user-${id}`,
     slug: id,
     username: id,
     firstName: 'Имя',

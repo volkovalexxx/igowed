@@ -1,6 +1,7 @@
 /** Подрядчик в том виде, в каком его показывают доски избранного и шорт-листа. */
 export type BoardVendor = {
   id: string
+  userId: string
   slug: string
   username: string
   firstName: string
