@@ -8,6 +8,7 @@ Wedding marketplace with SEO frontend, separate API, PostgreSQL, and media stora
 - Backend: Fastify API in `apps/api`
 - Database: PostgreSQL + Prisma
 - Media: S3-compatible storage, MinIO for local development
+- Queue: Redis + BullMQ for background media processing (responsive variants, blur placeholder)
 - Tests: Vitest for API
 
 ## Branches
@@ -42,7 +43,7 @@ Apply database schema:
 npm run db:push
 ```
 
-The Docker stack runs web, API, PostgreSQL, and MinIO:
+The Docker stack runs web, API, background worker, PostgreSQL, Redis, and MinIO:
 
 - Web: http://localhost:3000
 - API: http://localhost:4000/api/v1

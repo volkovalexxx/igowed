@@ -1,9 +1,11 @@
+import type { Queue } from 'bullmq'
 import type { FastifyInstance } from 'fastify'
 import type { ApiEnv } from '../../config/env.js'
 import { createMediaRepository } from './media.repository.js'
+import { enqueueVariantsJob } from './media.queue.js'
 import { createPresignedUpload } from './media.service.js'
 import { createMediaStorage } from './media.storage.js'
-import type { MediaRepository, MediaStorage } from './media.types.js'
+import type { MediaRepository, MediaStorage, VariantsJobData } from './media.types.js'
 import { MediaValidationError, parseMediaAssetId } from './media.validation.js'
 
 export async function registerMediaRoutes(
@@ -11,6 +13,7 @@ export async function registerMediaRoutes(
   env: ApiEnv,
   storageOverride?: MediaStorage,
   repositoryOverride?: MediaRepository,
+  variantsQueue?: Queue<VariantsJobData>,
 ): Promise<void> {
   app.post('/api/v1/media/uploads', async (request, reply) => {
     try {
@@ -43,7 +46,17 @@ export async function registerMediaRoutes(
         return reply.status(404).send({ error: 'Медиа не найдено' })
       }
 
-      return reply.status(200).send({ asset })
+      // Тяжёлую генерацию responsive-вариантов уводим в очередь — HTTP-ответ не ждёт её.
+      if (variantsQueue) {
+        await enqueueVariantsJob(variantsQueue, {
+          assetId: asset.id,
+          objectKey: asset.objectKey,
+          contentType: asset.contentType,
+        })
+      }
+
+      // 202, когда генерация вариантов встала в очередь; 200 — когда очередь не настроена.
+      return reply.status(variantsQueue ? 202 : 200).send({ asset, processing: Boolean(variantsQueue) })
     } catch (error) {
       if (error instanceof MediaValidationError) {
         return reply.status(error.statusCode).send({ error: error.message })

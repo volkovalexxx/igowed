@@ -44,5 +44,20 @@ export function createMediaStorage(env: ApiEnv): MediaStorage {
     createUploadUrl(objectKey, expiresInSeconds) {
       return client.presignedPutObject(config.bucket, objectKey, expiresInSeconds)
     },
+
+    async downloadObject(objectKey) {
+      const stream = await client.getObject(config.bucket, objectKey)
+      const chunks: Buffer[] = []
+
+      for await (const chunk of stream) {
+        chunks.push(chunk as Buffer)
+      }
+
+      return Buffer.concat(chunks)
+    },
+
+    async uploadObject(objectKey, body, contentType) {
+      await client.putObject(config.bucket, objectKey, body, body.length, { 'Content-Type': contentType })
+    },
   }
 }

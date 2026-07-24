@@ -1,17 +1,20 @@
 import cors from '@fastify/cors'
 import helmet from '@fastify/helmet'
+import type { Queue } from 'bullmq'
 import Fastify, { type FastifyInstance } from 'fastify'
 import { loadEnv, type ApiEnv } from './config/env.js'
 import { registerCatalogRoutes } from './modules/catalog/catalog.routes.js'
 import { registerHealthRoutes } from './modules/health/health.routes.js'
 import { registerHomeRoutes } from './modules/home/home.routes.js'
 import { registerMediaRoutes } from './modules/media/media.routes.js'
-import type { MediaRepository, MediaStorage } from './modules/media/media.types.js'
+import { createMediaQueue, createRedisConnection } from './modules/media/media.queue.js'
+import type { MediaRepository, MediaStorage, VariantsJobData } from './modules/media/media.types.js'
 
 export type BuildServerOptions = {
   env?: ApiEnv
   mediaStorage?: MediaStorage
   mediaRepository?: MediaRepository
+  mediaQueue?: Queue<VariantsJobData>
 }
 
 export async function buildServer(options: BuildServerOptions = {}): Promise<FastifyInstance> {
@@ -26,6 +29,17 @@ export async function buildServer(options: BuildServerOptions = {}): Promise<Fas
     credentials: true,
   })
 
+  // Очередь генерации медиа-вариантов поднимается, только если задан REDIS_URL и её не подменили в тестах.
+  const connection = options.mediaQueue ? undefined : createRedisConnection(appEnv)
+  const variantsQueue = options.mediaQueue ?? (connection ? createMediaQueue(connection) : undefined)
+
+  if (connection) {
+    app.addHook('onClose', async () => {
+      await variantsQueue?.close()
+      await connection.quit()
+    })
+  }
+
   app.get('/api/v1', async () => ({
     name: 'I GO WED API',
     version: '0.1.0',
@@ -34,7 +48,7 @@ export async function buildServer(options: BuildServerOptions = {}): Promise<Fas
   await registerHealthRoutes(app, appEnv)
   await registerCatalogRoutes(app)
   await registerHomeRoutes(app)
-  await registerMediaRoutes(app, appEnv, options.mediaStorage, options.mediaRepository)
+  await registerMediaRoutes(app, appEnv, options.mediaStorage, options.mediaRepository, variantsQueue)
 
   return app
 }
