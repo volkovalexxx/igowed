@@ -6,6 +6,8 @@ import { buildServer } from '../src/server.js'
 const fakeStorage: MediaStorage = {
   getPublicUrl: (objectKey) => `http://localhost:9000/igowed-media/${objectKey}`,
   createUploadUrl: async (objectKey) => `http://minio:9000/igowed-media/${objectKey}?signature=test`,
+  downloadObject: async () => Buffer.alloc(0),
+  uploadObject: async () => undefined,
 }
 
 const fakeRepository: MediaRepository = {

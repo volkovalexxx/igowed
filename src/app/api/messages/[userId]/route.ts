@@ -7,6 +7,7 @@ import {
   type ChatThreadRouteContext,
 } from '@/features/messages/server/chat.http'
 import { getConversation, sendMessage } from '@/features/messages/server/chat.service'
+import { enforceRateLimit } from '@/lib/rate-limit/enforce'
 
 export async function GET(_request: NextRequest, context: ChatThreadRouteContext) {
   const currentUserId = await getSessionUserId()
@@ -32,6 +33,9 @@ export async function POST(request: NextRequest, context: ChatThreadRouteContext
   const { userId } = await context.params
 
   if (!currentUserId) return unauthorizedResponse()
+
+  const limited = await enforceRateLimit('message', currentUserId)
+  if (limited) return limited
 
   try {
     const message = await sendMessage(currentUserId, userId, await request.json(), chatRepository)
