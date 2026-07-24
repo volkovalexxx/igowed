@@ -160,6 +160,9 @@
   min-height: 50px;
   border-radius: 6px;
   padding: 0 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background: var(--dark);
   color: #fff;
   font-size: 14px;

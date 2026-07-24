@@ -10,6 +10,7 @@ export type ProductAttribute = {
 }
 
 export type ProductVendorRef = {
+  userId: string
   slug: string
   name: string
   username: string

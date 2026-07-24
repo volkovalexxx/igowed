@@ -16,7 +16,7 @@ function productRecord(overrides = {}) {
     category: { name: 'Транспорт', slug: 'transport' },
     photos: [{ id: 'ph1', url: 'a.jpg' }],
     attributes: [{ id: 'a1', label: 'Цвет', value: 'белый' }],
-    vendor: { slug: 'carcar', firstName: 'Иван', lastName: 'Петров', username: 'carcar' },
+    vendor: { userId: 'u-carcar', slug: 'carcar', firstName: 'Иван', lastName: 'Петров', username: 'carcar' },
     ...overrides,
   }
 }

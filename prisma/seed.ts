@@ -199,6 +199,43 @@ async function main() {
     })
   }
 
+  // Messages (диалог между заказчиком-админом и подрядчиком)
+  const adminUser = await prisma.user.findUnique({ where: { email: 'admin@igowed.by' } })
+  const loginovUser = await prisma.user.findFirst({ where: { email: 'loginov@igowed.by' } })
+
+  if (adminUser && loginovUser) {
+    await prisma.message.deleteMany({
+      where: {
+        OR: [
+          { senderId: adminUser.id, receiverId: loginovUser.id },
+          { senderId: loginovUser.id, receiverId: adminUser.id },
+        ],
+      },
+    })
+
+    const base = Date.UTC(2026, 6, 22, 10, 0, 0)
+    const thread = [
+      { from: adminUser.id, to: loginovUser.id, text: 'Здравствуйте! Хочу уточнить детали фотосъёмки на 14 июня.', minutes: 0 },
+      { from: loginovUser.id, to: adminUser.id, text: 'Добрый день! Конечно, слушаю вас.', minutes: 3 },
+      { from: adminUser.id, to: loginovUser.id, text: 'Нас будет 2 человека + 5 гостей. Планируем начать в 11:00 на площадке Замка Мир.', minutes: 6 },
+      { from: loginovUser.id, to: adminUser.id, text: 'Отлично! Я знаком с этой площадкой, свет там прекрасный утром.', minutes: 10 },
+      { from: adminUser.id, to: loginovUser.id, text: 'Спасибо за совет! Что-то нужно согласовать заранее?', minutes: 60 * 25 },
+      { from: loginovUser.id, to: adminUser.id, text: 'Всё уже в договоре. Встречаемся у главных ворот в 10:45.', minutes: 60 * 25 + 30 },
+    ]
+
+    for (const m of thread) {
+      await prisma.message.create({
+        data: {
+          senderId: m.from,
+          receiverId: m.to,
+          text: m.text,
+          isRead: m.from === adminUser.id,
+          createdAt: new Date(base + m.minutes * 60 * 1000),
+        },
+      })
+    }
+  }
+
   console.log('✅ Seed complete')
 }
 

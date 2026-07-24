@@ -44,9 +44,9 @@ export function ProductCardPage({ product }: { product: ProductCard }) {
             ) : null}
 
             <div className={styles.actions}>
-              <button className={styles.ctaButton} type="button">
+              <Link className={styles.ctaButton} href={`/dashboard/messages?to=${product.vendor.userId}`}>
                 {product.ctaLabel}
-              </button>
+              </Link>
               <Link className={styles.vendorLink} href={`/vendor/${product.vendor.slug}`}>
                 {product.vendor.name}
               </Link>
