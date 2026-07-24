@@ -88,12 +88,23 @@ export async function PATCH(req: NextRequest, { params }: Params) {
       'pricePerHour',
       'currency',
       'isActive',
+      'country',
+      'bankDetails',
     ] as const
 
     const data: Record<string, unknown> = {}
     for (const field of allowedFields) {
       if (field in body) {
         data[field] = body[field]
+      }
+    }
+
+    // Специализации — связь, а не скалярное поле: пересобираем набор целиком.
+    if (Array.isArray(body.specializations)) {
+      const names = [...new Set((body.specializations as unknown[]).map((item) => String(item).trim()).filter(Boolean))]
+      data.specializations = {
+        deleteMany: {},
+        create: names.map((name) => ({ name })),
       }
     }
 
