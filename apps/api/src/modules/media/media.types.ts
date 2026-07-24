@@ -15,6 +15,33 @@ export type CreateUploadInput = CreateUploadRequest & {
 export type MediaStorage = {
   getPublicUrl(objectKey: string): string
   createUploadUrl(objectKey: string, expiresInSeconds: number): Promise<string>
+  downloadObject(objectKey: string): Promise<Buffer>
+  uploadObject(objectKey: string, body: Buffer, contentType: string): Promise<void>
+}
+
+export type MediaVariant = {
+  width: number
+  objectKey: string
+  url: string
+}
+
+export type ProcessedMedia = {
+  width: number
+  height: number
+  blurDataUrl: string
+  variants: MediaVariant[]
+}
+
+export type MediaVariantsRepository = {
+  markProcessed(id: string, processed: ProcessedMedia): Promise<void>
+  markFailed(id: string): Promise<void>
+  findObjectKey(id: string): Promise<{ objectKey: string; contentType: string } | undefined>
+}
+
+export type VariantsJobData = {
+  assetId: string
+  objectKey: string
+  contentType: string
 }
 
 export type MediaAssetRecord = {

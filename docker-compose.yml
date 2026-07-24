@@ -17,6 +17,21 @@ services:
       timeout: 5s
       retries: 5
 
+  redis:
+    image: redis:7-alpine
+    container_name: igowed-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   minio:
     image: minio/minio:RELEASE.2025-09-07T16-13-09Z
     container_name: igowed-minio
@@ -58,6 +73,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      redis:
+        condition: service_healthy
       minio:
         condition: service_healthy
       minio-bucket:
@@ -68,6 +85,7 @@ services:
       API_PORT: 4000
       WEB_ORIGIN: http://localhost:3000
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/igowed?schema=public
+      REDIS_URL: redis://redis:6379
       S3_ENDPOINT: http://minio:9000
       S3_PUBLIC_URL: http://localhost:9000/igowed-media
       S3_BUCKET: igowed-media
@@ -78,6 +96,32 @@ services:
     volumes:
       - ./apps/api/src:/app/apps/api/src
       - ./apps/api/test:/app/apps/api/test
+
+  worker:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    container_name: igowed-worker
+    restart: unless-stopped
+    command: ["npm", "run", "worker", "--workspace", "@igowed/api"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/igowed?schema=public
+      REDIS_URL: redis://redis:6379
+      S3_ENDPOINT: http://minio:9000
+      S3_PUBLIC_URL: http://localhost:9000/igowed-media
+      S3_BUCKET: igowed-media
+      S3_ACCESS_KEY: igowed
+      S3_SECRET_KEY: igowed-password
+    volumes:
+      - ./apps/api/src:/app/apps/api/src
 
   web:
     build:
@@ -110,4 +154,5 @@ services:
 
 volumes:
   postgres-data:
+  redis-data:
   minio-data:

@@ -220,6 +220,10 @@ model MediaAsset {
   contentType String
   sizeBytes   Int
   status      String   @default("PENDING")
+  width       Int?
+  height      Int?
+  blurDataUrl String?  @db.Text
+  variants    Json?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
