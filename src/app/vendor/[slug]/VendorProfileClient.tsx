@@ -1,59 +1,20 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { Pin, Phone, Globe, Star, Chat, Check, Close } from '@/components/ui/Icons';
 
-/* ── Types ──────────────────────────────────────────────────────────────── */
+/* ── Types (re-exported from the feature so page + client share one source) ─ */
 
-export type DisplayMode = 'VERTICAL' | 'HORIZONTAL' | 'SQUARE';
+import type {
+  DisplayMode,
+  ProfilePhoto as VendorPhoto,
+  ProfileReview as Review,
+  ProfileService as VendorService,
+  VendorProfile as VendorData,
+} from '@/features/vendors/profile/vendorProfile.types';
 
-export interface VendorService {
-  id: string;
-  category: string;
-  price: string;
-  description: string;
-}
-
-export interface Review {
-  id: string;
-  userName: string;
-  userAvatar: string;
-  date: string;
-  rating: number;
-  text: string;
-}
-
-export interface VendorPhoto {
-  id: string;
-  src: string;
-  alt: string;
-}
-
-export interface VendorData {
-  slug: string;
-  name: string;
-  username: string;
-  city: string;
-  isPro: boolean;
-  rating: number;
-  reviewCount: number;
-  photosCount: number;
-  price: string;
-  coverPhoto: string;
-  avatar: string;
-  displayMode: DisplayMode;
-  bio: string;
-  address: string;
-  phone: string;
-  website: string;
-  instagram: string;
-  languages: string[];
-  workingHours: string;
-  bankDetails: string;
-  photos: VendorPhoto[];
-  services: VendorService[];
-  reviews: Review[];
-}
+export type { DisplayMode, VendorPhoto, Review, VendorService, VendorData };
 
 /* ── Sub-components ─────────────────────────────────────────────────────── */
 
@@ -295,10 +256,14 @@ export default function VendorProfileClient({ vendor }: { vendor: VendorData }) 
                   {savedToFavorites ? '♥' : '♡'}
                 </span>
               </button>
-              <button className="btn btn-outline" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <Link
+                className="btn btn-outline"
+                href={`/dashboard/messages?to=${vendor.userId}`}
+                style={{ display: 'flex', alignItems: 'center', gap: 6 }}
+              >
                 <Chat size={15} />
                 Написать
-              </button>
+              </Link>
               <button className="btn btn-gold">В профиль</button>
             </div>
           </div>

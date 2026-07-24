@@ -18,7 +18,7 @@ function product(overrides: Partial<ProductCard> = {}): ProductCard {
     categorySlug: 'transport',
     photos: [],
     attributes: [],
-    vendor: { slug: 'carcar', name: 'CarCar', username: 'carcar' },
+    vendor: { userId: 'u-carcar', slug: 'carcar', name: 'CarCar', username: 'carcar' },
     ...overrides,
   }
 }
