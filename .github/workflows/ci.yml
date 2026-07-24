@@ -47,6 +47,11 @@ jobs:
       - name: Build web
         run: npm run build
 
+      # После build: next-env.d.ts и .next/types уже сгенерированы, tsc видит весь проект,
+      # включая *.test.ts (их не типизируют ни vitest, ни next build).
+      - name: Type check
+        run: npx tsc --noEmit -p tsconfig.json
+
       - name: Build API
         run: npm run build:api
 
