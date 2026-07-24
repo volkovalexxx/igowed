@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
-import { Camera, Check, Close, ChevDown } from '@/components/ui/Icons';
+import { Check, Close, ChevDown } from '@/components/ui/Icons';
+import { AvatarUpload } from '@/features/media/upload/AvatarUpload';
 import { mapProfileFormToPatch } from './vendorProfileForm';
 import type { DisplayMode, ProfileFormData } from './vendorProfileForm.types';
 import styles from './ProfilePage.module.css';
@@ -276,7 +277,7 @@ function DisplayModeCard({
 
 /* ── Main page ──────────────────────────────────────────────────────────── */
 
-export default function VendorProfileEditor({ vendorId, initialForm }: { vendorId: string; initialForm: ProfileFormData }) {
+export default function VendorProfileEditor({ vendorId, initialForm, initialAvatar }: { vendorId: string; initialForm: ProfileFormData; initialAvatar: string | null }) {
   const [form, setForm] = useState<ProfileFormData>(initialForm);
 
   const [cityInput, setCityInput] = useState('');
@@ -289,6 +290,14 @@ export default function VendorProfileEditor({ vendorId, initialForm }: { vendorI
 
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+
+  const saveAvatar = async (avatar: string) => {
+    await fetch(`/api/vendors/${vendorId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ avatar }),
+    });
+  };
 
   const handleSave = async () => {
     setError('');
@@ -357,40 +366,7 @@ export default function VendorProfileEditor({ vendorId, initialForm }: { vendorI
 
         {/* Avatar */}
         <div className={styles.avatarRow}>
-          <div style={{ position: 'relative', flexShrink: 0 }}>
-            <div style={{
-              width: 80, height: 80, borderRadius: '50%',
-              background: 'var(--gold-soft)',
-              overflow: 'hidden', border: '3px solid var(--gold)',
-            }}>
-              <img
-                src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&q=80"
-                alt="Аватар"
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-              />
-            </div>
-            <button style={{
-              position: 'absolute', bottom: 0, right: 0,
-              width: 26, height: 26, borderRadius: '50%',
-              background: 'var(--gold)', border: '2px solid #fff',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              cursor: 'pointer',
-            }}>
-              <Camera size={12} style={{ color: '#fff' }} />
-            </button>
-          </div>
-          <div>
-            <button style={{
-              fontSize: 13, color: 'var(--gold)',
-              background: 'none', border: 'none', cursor: 'pointer', padding: 0,
-              display: 'flex', alignItems: 'center', gap: 5,
-              fontFamily: 'inherit',
-            }}>
-              <Camera size={14} />
-              Изменить фото
-            </button>
-            <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 4 }}>JPG, PNG — до 5 МБ</div>
-          </div>
+          <AvatarUpload initialUrl={initialAvatar} onUploaded={saveAvatar} ownerId={vendorId} />
         </div>
 
         {/* Form grid */}
