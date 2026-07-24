@@ -1,7 +1,10 @@
 import Link from 'next/link'
 import { EventReviewSection } from '@/features/events/review/EventReviewSection'
 import type { EventVendorReview } from '@/features/events/review/eventReview.types'
+import { EventVendorsSection } from '@/features/events/vendors/EventVendorsSection'
+import type { EventVendorSlot } from '@/features/events/vendors/eventVendors.types'
 import { profileNavLinks } from '@/features/vendors/board/vendorBoard.data'
+import type { BoardVendor } from '@/features/vendors/board/vendorBoard.types'
 import type { EventRecord } from '@/features/events/server/event.types'
 import { formatEventDateNumeric, formatEventDateShort, formatEventNumber, formatEventPlace, getDaysUntilEvent } from './eventDetails.format'
 import styles from './EventDetails.module.css'
@@ -34,30 +37,6 @@ const tutorialCards = [
 ]
 
 const referenceFolders = ['Общие', 'Образ невесты', 'Костюм жениха', 'Свадебный торт']
-
-const contractorSlots = [
-  {
-    role: 'Фотограф',
-    name: 'Дмитрий Логинов',
-    username: '@loginov_pho',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&h=120&q=80',
-    selected: true,
-  },
-  {
-    role: 'Видеограф 1 / 2',
-    name: 'Елизавета Комарова',
-    username: '@elis_photo',
-    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&h=120&q=80',
-    selected: true,
-  },
-  { role: 'Ведущий' },
-  { role: 'Площадка' },
-  { role: 'Декоратор' },
-  { role: 'Транспорт' },
-  { role: 'Женский образ' },
-  { role: 'Визажист' },
-  { role: 'Мужской образ' },
-]
 
 const recommendedVendors = [
   {
@@ -232,55 +211,16 @@ function EventCover({ event }: { event: EventRecord }) {
   return <div className={styles.cover} aria-label={`Обложка мероприятия ${event.title}`} role="img" style={{ backgroundImage: `url(${image})` }} />
 }
 
-function VendorSlot({ slot }: { slot: (typeof contractorSlots)[number] }) {
-  return (
-    <article className={styles.contractorCard}>
-      <h3>{slot.role}</h3>
-      {slot.selected ? (
-        <>
-          <p className={styles.contractorName}>{slot.name}</p>
-          <p className={styles.contractorUser}>{slot.username}</p>
-          <div className={styles.avatarWrap}>
-            <button type="button" aria-label="Предыдущий">
-              ‹
-            </button>
-            <span className={styles.vendorAvatar} style={{ backgroundImage: `url(${slot.avatar})` }} />
-            <button type="button" aria-label="Следующий">
-              ›
-            </button>
-          </div>
-          <p className={styles.rating}>★★★★★ <span>4.0</span></p>
-          <Link className={styles.lightButton} href="/vendor/dmitry-loginov">
-            Перейти в профиль
-          </Link>
-          <button className={styles.blackButton} type="button">
-            Отправить сообщение
-          </button>
-        </>
-      ) : (
-        <>
-          <span className={styles.emptyAvatar}>●</span>
-          <p className={styles.emptyText}>Исполнитель не выбран</p>
-          <button className={styles.lightButton} type="button">
-            Перейти в избранное ♡
-          </button>
-          <Link className={styles.blackButton} href="/catalog">
-            Перейти в каталог
-          </Link>
-        </>
-      )}
-    </article>
-  )
-}
-
 type EventDetailsPageProps = {
   event: EventRecord
   /** Мероприятие прошло: слоты подрядчиков уступают место карточкам с оценкой. */
   isFinished: boolean
   reviewVendors: EventVendorReview[]
+  vendorSlots: EventVendorSlot[]
+  vendorCandidates: BoardVendor[]
 }
 
-export function EventDetailsPage({ event, isFinished, reviewVendors }: EventDetailsPageProps) {
+export function EventDetailsPage({ event, isFinished, reviewVendors, vendorSlots, vendorCandidates }: EventDetailsPageProps) {
   const place = formatEventPlace(event.country, event.city)
   const guests = formatEventNumber(event.guestMax ?? event.guestMin)
   const budget = formatEventNumber(event.budgetMax ?? event.budgetMin)
@@ -411,22 +351,7 @@ export function EventDetailsPage({ event, isFinished, reviewVendors }: EventDeta
         {isFinished ? (
           <EventReviewSection eventId={event.id} initialVendors={reviewVendors} />
         ) : (
-        <section className={styles.contractors}>
-          <SectionHeader title="Подрядчики для вашего мероприятия" />
-          <div className={styles.contractorGrid}>
-            {contractorSlots.map((slot) => (
-              <VendorSlot key={slot.role} slot={slot} />
-            ))}
-            <article className={`${styles.contractorCard} ${styles.addContractor}`}>
-              <button type="button">+</button>
-              <p>Добавить подрядчика</p>
-            </article>
-          </div>
-          <div className={styles.mobileContractorActions}>
-            <button type="button">Добавить подрядчика +</button>
-            <Link href="/catalog">Перейти в каталог</Link>
-          </div>
-        </section>
+          <EventVendorsSection candidates={vendorCandidates} eventId={event.id} initialSlots={vendorSlots} />
         )}
 
         <section className={styles.recommendations}>
