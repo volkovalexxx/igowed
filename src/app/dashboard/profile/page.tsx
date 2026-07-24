@@ -27,5 +27,5 @@ export default async function DashboardProfilePage() {
     )
   }
 
-  return <VendorProfileEditor initialForm={mapVendorToProfileForm(vendor)} vendorId={vendor.id} />
+  return <VendorProfileEditor initialAvatar={vendor.avatar} initialForm={mapVendorToProfileForm(vendor)} vendorId={vendor.id} />
 }

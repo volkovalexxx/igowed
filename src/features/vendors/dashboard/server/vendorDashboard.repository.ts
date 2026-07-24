@@ -12,6 +12,7 @@ export const vendorDashboardRepository = {
 
     return {
       id: vendor.id,
+      avatar: vendor.avatar,
       firstName: vendor.firstName,
       lastName: vendor.lastName,
       username: vendor.username,

@@ -5,6 +5,7 @@ import type { ProfileFormData, VendorProfileRecord } from './vendorProfileForm.t
 function record(overrides: Partial<VendorProfileRecord> = {}): VendorProfileRecord {
   return {
     id: 'v1',
+    avatar: null,
     firstName: 'Анна',
     lastName: 'Смирнова',
     username: 'anna_photo',

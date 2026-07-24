@@ -19,6 +19,9 @@ function requireMediaEnv(env: ApiEnv) {
 
   return {
     endpoint: new URL(env.S3_ENDPOINT as string),
+    // Presigned URL должен указывать на хост, доступный из браузера. Если публичный endpoint
+    // не задан, падаем на внутренний (годится, когда клиент и хранилище в одной сети).
+    publicEndpoint: new URL((env.S3_PUBLIC_ENDPOINT ?? env.S3_ENDPOINT) as string),
     publicUrl: (env.S3_PUBLIC_URL as string).replace(/\/$/, ''),
     bucket: env.S3_BUCKET as string,
     accessKey: env.S3_ACCESS_KEY as string,
@@ -28,13 +31,23 @@ function requireMediaEnv(env: ApiEnv) {
 
 export function createMediaStorage(env: ApiEnv): MediaStorage {
   const config = requireMediaEnv(env)
-  const client = new Client({
-    endPoint: config.endpoint.hostname,
-    port: config.endpoint.port ? Number(config.endpoint.port) : undefined,
-    useSSL: config.endpoint.protocol === 'https:',
-    accessKey: config.accessKey,
-    secretKey: config.secretKey,
-  })
+
+  function makeClient(endpoint: URL) {
+    return new Client({
+      endPoint: endpoint.hostname,
+      port: endpoint.port ? Number(endpoint.port) : undefined,
+      useSSL: endpoint.protocol === 'https:',
+      // Явный регион — иначе presignedPutObject делает сетевой region-lookup к endpoint,
+      // а публичный хост изнутри контейнера недостижим.
+      region: 'us-east-1',
+      accessKey: config.accessKey,
+      secretKey: config.secretKey,
+    })
+  }
+
+  const client = makeClient(config.endpoint)
+  // Отдельный клиент с публичным хостом — presigned-подпись MinIO привязана к хосту в URL.
+  const publicClient = makeClient(config.publicEndpoint)
 
   return {
     getPublicUrl(objectKey) {
@@ -42,7 +55,7 @@ export function createMediaStorage(env: ApiEnv): MediaStorage {
     },
 
     createUploadUrl(objectKey, expiresInSeconds) {
-      return client.presignedPutObject(config.bucket, objectKey, expiresInSeconds)
+      return publicClient.presignedPutObject(config.bucket, objectKey, expiresInSeconds)
     },
 
     async downloadObject(objectKey) {

@@ -5,6 +5,7 @@ export type BusinessType = 'IP' | 'OOO' | 'INDIVIDUAL'
 /** Запись подрядчика в форме, которой владеет кабинет. */
 export type VendorProfileRecord = {
   id: string
+  avatar: string | null
   firstName: string
   lastName: string
   username: string
