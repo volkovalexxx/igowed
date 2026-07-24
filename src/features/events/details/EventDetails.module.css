@@ -502,6 +502,12 @@
   padding-bottom: 66px;
 }
 
+.vendorsError {
+  margin: 0 0 18px;
+  color: #e53131;
+  font-size: 13px;
+}
+
 .folderGrid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
