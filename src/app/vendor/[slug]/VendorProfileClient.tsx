@@ -2,6 +2,8 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Header from '@/components/layout/Header';
+import type { HeaderViewer } from '@/components/layout/header.helpers';
 import { Pin, Phone, Globe, Star, Chat, Check, Close } from '@/components/ui/Icons';
 import { BookingButton } from '@/features/bookings/create/BookingButton';
 import { ReviewButton } from '@/features/reviews/create/ReviewButton';
@@ -183,7 +185,7 @@ function InfoRow({ label, children }: { label: string; children: React.ReactNode
 
 type Tab = 'portfolio' | 'packages' | 'reviews' | 'info';
 
-export default function VendorProfileClient({ vendor, viewer }: { vendor: VendorData; viewer: ProfileViewer }) {
+export default function VendorProfileClient({ vendor, viewer, headerViewer }: { vendor: VendorData; viewer: ProfileViewer; headerViewer?: HeaderViewer | null }) {
   const [activeTab, setActiveTab] = useState<Tab>('portfolio');
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [savedToFavorites, setSavedToFavorites] = useState(false);
@@ -205,6 +207,7 @@ export default function VendorProfileClient({ vendor, viewer }: { vendor: Vendor
 
   return (
     <div style={{ background: '#fff', minHeight: '100vh' }}>
+      <Header viewer={headerViewer} />
       {/* ── Cover photo ── */}
       <div style={{ position: 'relative', height: 280, background: '#222', overflow: 'hidden' }}>
         <img

@@ -1,17 +1,18 @@
 import Link from 'next/link'
 import Header from '@/components/layout/Header'
+import type { HeaderViewer } from '@/components/layout/header.helpers'
 import Footer from '@/components/layout/Footer'
 import { ProductGallery } from './ProductGallery'
 import { buildProductBreadcrumbs, formatProductPrice } from './productCard.format'
 import type { ProductCard } from './productCard.types'
 import styles from './ProductCardPage.module.css'
 
-export function ProductCardPage({ product }: { product: ProductCard }) {
+export function ProductCardPage({ product, viewer }: { product: ProductCard; viewer?: HeaderViewer | null }) {
   const breadcrumbs = buildProductBreadcrumbs(product)
 
   return (
     <div className={styles.page}>
-      <Header />
+      <Header viewer={viewer} />
 
       <main className={styles.content}>
         <nav className={styles.breadcrumbs} aria-label="Хлебные крошки">

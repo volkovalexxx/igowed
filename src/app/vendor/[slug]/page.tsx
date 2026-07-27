@@ -4,6 +4,7 @@ import { getVendorProfile } from '@/features/vendors/profile/server/vendorProfil
 import { vendorProfileRepository } from '@/features/vendors/profile/server/vendorProfile.repository'
 import { reviewCreateRepository } from '@/features/reviews/create/reviewCreate.repository'
 import { getReviewEligibility } from '@/features/reviews/create/reviewCreate.service'
+import { toHeaderViewer } from '@/components/layout/header.helpers'
 import { auth } from '@/lib/auth'
 import VendorProfileClient from './VendorProfileClient'
 
@@ -49,5 +50,5 @@ export default async function VendorProfilePage({ params }: VendorRouteProps) {
     hasReviewed: alreadyReviewed,
   }
 
-  return <VendorProfileClient vendor={vendor} viewer={viewer} />
+  return <VendorProfileClient vendor={vendor} viewer={viewer} headerViewer={toHeaderViewer(session)} />
 }
