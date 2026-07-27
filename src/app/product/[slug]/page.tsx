@@ -1,8 +1,10 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+import { toHeaderViewer } from '@/components/layout/header.helpers'
 import { ProductCardPage } from '@/features/products/card/ProductCardPage'
 import { productCardRepository } from '@/features/products/card/server/productCard.repository'
 import { getProductBySlug } from '@/features/products/card/server/productCard.service'
+import { auth } from '@/lib/auth'
 
 type ProductRouteProps = {
   params: Promise<{
@@ -26,11 +28,11 @@ export async function generateMetadata({ params }: ProductRouteProps): Promise<M
 
 export default async function ProductRoute({ params }: ProductRouteProps) {
   const { slug } = await params
-  const product = await getProductBySlug(slug, productCardRepository)
+  const [product, session] = await Promise.all([getProductBySlug(slug, productCardRepository), auth()])
 
   if (!product) {
     notFound()
   }
 
-  return <ProductCardPage product={product} />
+  return <ProductCardPage product={product} viewer={toHeaderViewer(session)} />
 }
