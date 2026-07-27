@@ -3,6 +3,12 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { Pin, Phone, Globe, Star, Chat, Check, Close } from '@/components/ui/Icons';
+import { BookingButton } from '@/features/bookings/create/BookingButton';
+
+export type ProfileViewer = {
+  isAuthenticated: boolean;
+  isOwner: boolean;
+};
 
 /* ── Types (re-exported from the feature so page + client share one source) ─ */
 
@@ -174,7 +180,7 @@ function InfoRow({ label, children }: { label: string; children: React.ReactNode
 
 type Tab = 'portfolio' | 'packages' | 'reviews' | 'info';
 
-export default function VendorProfileClient({ vendor }: { vendor: VendorData }) {
+export default function VendorProfileClient({ vendor, viewer }: { vendor: VendorData; viewer: ProfileViewer }) {
   const [activeTab, setActiveTab] = useState<Tab>('portfolio');
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [savedToFavorites, setSavedToFavorites] = useState(false);
@@ -256,15 +262,23 @@ export default function VendorProfileClient({ vendor }: { vendor: VendorData }) 
                   {savedToFavorites ? '♥' : '♡'}
                 </span>
               </button>
-              <Link
-                className="btn btn-outline"
-                href={`/dashboard/messages?to=${vendor.userId}`}
-                style={{ display: 'flex', alignItems: 'center', gap: 6 }}
-              >
-                <Chat size={15} />
-                Написать
-              </Link>
-              <button className="btn btn-gold">В профиль</button>
+              {!viewer.isOwner && (
+                <Link
+                  className="btn btn-outline"
+                  href={viewer.isAuthenticated ? `/dashboard/messages?to=${vendor.userId}` : `/login?next=/vendor/${vendor.slug}`}
+                  style={{ display: 'flex', alignItems: 'center', gap: 6 }}
+                >
+                  <Chat size={15} />
+                  Написать
+                </Link>
+              )}
+              <BookingButton
+                vendorSlug={vendor.slug}
+                vendorName={vendor.name}
+                isOwner={viewer.isOwner}
+                isAuthenticated={viewer.isAuthenticated}
+                loginHref={`/login?next=/vendor/${vendor.slug}`}
+              />
             </div>
           </div>
 
