@@ -7,6 +7,7 @@ export const RATE_LIMITS = {
   message: { limit: 30, windowMs: 60_000 },
   review: { limit: 15, windowMs: 60_000 },
   register: { limit: 5, windowMs: 60_000 },
+  password: { limit: 5, windowMs: 60_000 },
 } satisfies Record<string, RateLimitRule>
 
 export type RateLimitScope = keyof typeof RATE_LIMITS
