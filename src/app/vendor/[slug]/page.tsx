@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getVendorProfile } from '@/features/vendors/profile/server/vendorProfile.service'
 import { vendorProfileRepository } from '@/features/vendors/profile/server/vendorProfile.repository'
+import { auth } from '@/lib/auth'
 import VendorProfileClient from './VendorProfileClient'
 
 type VendorRouteProps = {
@@ -26,11 +27,16 @@ export async function generateMetadata({ params }: VendorRouteProps): Promise<Me
 
 export default async function VendorProfilePage({ params }: VendorRouteProps) {
   const { slug } = await params
-  const vendor = await getVendorProfile(slug, vendorProfileRepository)
+  const [vendor, session] = await Promise.all([getVendorProfile(slug, vendorProfileRepository), auth()])
 
   if (!vendor) {
     notFound()
   }
 
-  return <VendorProfileClient vendor={vendor} />
+  const viewer = {
+    isAuthenticated: Boolean(session?.user?.id),
+    isOwner: session?.user?.id === vendor.userId,
+  }
+
+  return <VendorProfileClient vendor={vendor} viewer={viewer} />
 }
