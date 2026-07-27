@@ -1,18 +1,17 @@
 import { AuthShell } from '@/features/auth/AuthShell'
-import { WelcomeCard } from '@/features/auth/WelcomeCard'
+import { HomeHub } from './hub/HomeHub'
 
 type AuthenticatedHomePageProps = {
   user: {
+    name?: string | null
     role?: string | null
   }
 }
 
 export function AuthenticatedHomePage({ user }: AuthenticatedHomePageProps) {
-  const role = user.role === 'VENDOR' ? 'vendor' : 'client'
-
   return (
     <AuthShell centered showBrand={false}>
-      <WelcomeCard role={role} />
+      <HomeHub name={user.name} role={user.role} />
     </AuthShell>
   )
 }
