@@ -2,6 +2,8 @@
 
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
+import Header from '@/components/layout/Header';
+import type { HeaderViewer } from '@/components/layout/header.helpers';
 import VendorCard from '@/components/ui/VendorCard';
 import { Search, Grid, List, ChevDown } from '@/components/ui/Icons';
 import {
@@ -157,7 +159,7 @@ function VideoCard({ tutorial }: { tutorial: (typeof VIDEO_TUTORIALS)[0] }) {
 
 type SortOption = CatalogSortOption;
 
-export function CatalogClient({ vendors }: { vendors: CatalogVendor[] }) {
+export function CatalogClient({ vendors, viewer }: { vendors: CatalogVendor[]; viewer?: HeaderViewer | null }) {
   /* view / layout */
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
 
@@ -230,9 +232,11 @@ export function CatalogClient({ vendors }: { vendors: CatalogVendor[] }) {
   return (
     <div style={{ background: 'var(--paper)', minHeight: '100vh' }}>
 
-      {/* ── Top bar ─────────────────────────────────────────────────── */}
+      <Header activePage="Каталог" viewer={viewer} />
+
+      {/* ── Top bar (filters) — не sticky: прилипшую навигацию держит сам Header ── */}
       <div
-        className="sticky top-0 z-30 bg-white"
+        className="bg-white"
         style={{ borderBottom: '1px solid var(--border)' }}
       >
         <div
