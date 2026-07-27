@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import Header from '@/components/layout/Header';
+import type { HeaderViewer } from '@/components/layout/header.helpers';
 import Footer from '@/components/layout/Footer';
 import { Search } from '@/components/ui/Icons';
 import { filterBlogPosts } from '@/features/blog/blog.filter';
@@ -95,7 +96,7 @@ function BlogCard({ post }: { post: BlogListItem }) {
 
 /* ── Page ─────────────────────────────────────────────────────────────── */
 
-export function BlogListClient({ posts }: { posts: BlogListItem[] }) {
+export function BlogListClient({ posts, viewer }: { posts: BlogListItem[]; viewer?: HeaderViewer | null }) {
   const [activeCategory, setActiveCategory] = useState<Category>('Все');
   const [search, setSearch] = useState('');
   const [visibleCount, setVisibleCount] = useState(8);
@@ -107,7 +108,7 @@ export function BlogListClient({ posts }: { posts: BlogListItem[] }) {
 
   return (
     <>
-      <Header activePage="Блог" />
+      <Header activePage="Блог" viewer={viewer} />
 
       <main>
         {/* ── Hero ──────────────────────────────────────────────────── */}

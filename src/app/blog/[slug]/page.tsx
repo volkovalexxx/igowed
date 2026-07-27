@@ -2,7 +2,9 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import Header from '@/components/layout/Header'
+import { toHeaderViewer } from '@/components/layout/header.helpers'
 import Footer from '@/components/layout/Footer'
+import { auth } from '@/lib/auth'
 import { Cal } from '@/components/ui/Icons'
 import { blogPostRepository } from '@/features/blog/server/blogPost.repository'
 import { getBlogArticle, listBlogPosts } from '@/features/blog/server/blogPost.service'
@@ -56,11 +58,14 @@ export default async function ArticlePage({ params }: ArticleRouteProps) {
     notFound()
   }
 
-  const related = (await listBlogPosts(blogPostRepository)).filter((post) => post.slug !== article.slug).slice(0, 3)
+  const [related, session] = await Promise.all([
+    listBlogPosts(blogPostRepository).then((posts) => posts.filter((post) => post.slug !== article.slug).slice(0, 3)),
+    auth(),
+  ])
 
   return (
     <>
-      <Header activePage="Блог" />
+      <Header activePage="Блог" viewer={toHeaderViewer(session)} />
 
       <main className="py-8">
         <div className="container">
