@@ -4,10 +4,13 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Pin, Phone, Globe, Star, Chat, Check, Close } from '@/components/ui/Icons';
 import { BookingButton } from '@/features/bookings/create/BookingButton';
+import { ReviewButton } from '@/features/reviews/create/ReviewButton';
 
 export type ProfileViewer = {
   isAuthenticated: boolean;
   isOwner: boolean;
+  canReview: boolean;
+  hasReviewed: boolean;
 };
 
 /* ── Types (re-exported from the feature so page + client share one source) ─ */
@@ -403,6 +406,11 @@ export default function VendorProfileClient({ vendor, viewer }: { vendor: Vendor
             {/* REVIEWS */}
             {activeTab === 'reviews' && (
               <div>
+                {viewer.canReview && (
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 16 }}>
+                    <ReviewButton vendorSlug={vendor.slug} vendorName={vendor.name} alreadyReviewed={viewer.hasReviewed} />
+                  </div>
+                )}
                 <RatingBreakdown vendor={vendor} />
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
                   {vendor.reviews.map((review) => (

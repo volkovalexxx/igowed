@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getVendorProfile } from '@/features/vendors/profile/server/vendorProfile.service'
 import { vendorProfileRepository } from '@/features/vendors/profile/server/vendorProfile.repository'
+import { reviewCreateRepository } from '@/features/reviews/create/reviewCreate.repository'
+import { getReviewEligibility } from '@/features/reviews/create/reviewCreate.service'
 import { auth } from '@/lib/auth'
 import VendorProfileClient from './VendorProfileClient'
 
@@ -33,9 +35,18 @@ export default async function VendorProfilePage({ params }: VendorRouteProps) {
     notFound()
   }
 
+  const userId = session?.user?.id
+  const isOwner = userId === vendor.userId
+
+  const { eligible, alreadyReviewed } = userId && !isOwner
+    ? await getReviewEligibility(userId, slug, reviewCreateRepository)
+    : { eligible: false, alreadyReviewed: false }
+
   const viewer = {
-    isAuthenticated: Boolean(session?.user?.id),
-    isOwner: session?.user?.id === vendor.userId,
+    isAuthenticated: Boolean(userId),
+    isOwner,
+    canReview: eligible,
+    hasReviewed: alreadyReviewed,
   }
 
   return <VendorProfileClient vendor={vendor} viewer={viewer} />
