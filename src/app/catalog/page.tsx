@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
+import { toHeaderViewer } from '@/components/layout/header.helpers'
 import { CatalogClient } from '@/features/catalog/CatalogClient'
 import { catalogVendorRepository } from '@/features/catalog/server/catalogVendor.repository'
 import { listCatalogVendors } from '@/features/catalog/server/catalogVendor.service'
+import { auth } from '@/lib/auth'
 
 export const metadata: Metadata = {
   title: 'Каталог подрядчиков | I GO WED',
@@ -13,7 +15,7 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic'
 
 export default async function CatalogPage() {
-  const vendors = await listCatalogVendors(catalogVendorRepository)
+  const [vendors, session] = await Promise.all([listCatalogVendors(catalogVendorRepository), auth()])
 
-  return <CatalogClient vendors={vendors} />
+  return <CatalogClient vendors={vendors} viewer={toHeaderViewer(session)} />
 }
